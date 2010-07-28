@@ -1,21 +1,37 @@
 \chapter*{Synopsis}\addcontentsline{toc}{section}{Synopsis}
-The handling of constraints for multivariable predictive controllers (MPCs)
-forms the basis of their control algorithm and largely affects the performance
-of these controllers. A method to determine realistic constraints, based more
-on the process model than process knowledge, would therefore be an attractive
-addition to commercial MPC packages.
+The models used by model predictive controllers (MPCs) to predict future 
+outcomes are usually unconstrained forms like impulse or step responses 
+and discrete state space models. Certain MPC algorithms allow constraints
+ to be imposed on the inputs or outputs of a system; but they may be 
+infeasible as they are not checked for consistency via the process model.
+ Consistent constraint handling methods -- which account for their 
+interdependence and disambiguate the language used to specify constraints
+ -- would therefore be an attractive addition to any MPC package.
 
-A systematic method of determining constraints and interactively changing them
-was developed. The operability index, as defined by \citet{vinsonartoi}, was
-used as the basis for the design. Focus was placed on making the method
-rigorous (with regards to the use of the process model), creating an interactive
-environment in which to manipulate the constraints and ensuring compatibility
-of the outputs with commercial MPC packages.
+A rigorous and systematic approach to constraint management has been 
+developed, building on the work of Georgakis and others in interpreting 
+constraint interactions. The method supports linear and non-linear 
+(polynomial) steady-state system models, and provides an interface where 
+the following information can be obtained;
+\begin{itemize}
+  \item effects of constraint changes on the corresponding input/output 
+    constraints,
+  \item feasibility checks for constraints,
+  \item constraint-type information,
+  \item specification of constraint-set size and
+  \item optimal fitting of constraints within the desirable input/output 
+    space.
+\end{itemize}
+Mathematical rigour and unambiguous language for identifying constraint 
+types were key design criteria. Ample feedback to the user was added to 
+provide a supportive rather than prescriptive environment.
 
-For testing purposes, Honeywell's RMPCT$^{\copyright}$ and AspenTech's 
-DMCPlus$^{\copyright}$ was used in conjunction with the developed software. Case 
-studies form Anglo Platinum as well as the Tennessee Eastman sample problem was
-used to test functionality and performance of the method. 
+The outputs of the program are compatible with commercial MPC packages, 
+such as Honeywell’s RMPCT$^{\copyright}$ and AspenTech’s 
+DMCPlus$^{\copyright}$. These packages were used in conjunction with the 
+developed software to test functionality and performance of the method. 
+The method was applied to case studies from Anglo Platinum, the Tennessee 
+Eastman sample problem and laboratory scale test rigs.
 \bigskip
 
 \noindent \textbf{KEYWORDS:} constraint handling, multivariable predictive
