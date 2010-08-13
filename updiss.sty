@@ -4,7 +4,7 @@
 % - Automatically detect pdfTeX (or lack thereof) and change graphics filetypes accordingly
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{updiss}[2003/03/19 v0.1 University of Pretoria dissertation styles]
+\ProvidesPackage{updiss}[2010/07/27 v0.2 University of Pretoria dissertation styles]
 
 % Package includes
 
@@ -30,8 +30,13 @@
 \usepackage[french, thinspaces]{fancynum}
 %\usepackage[english, tight]{fancynum}
 
+% Typeset units correctly.  Default tight spacing inserts halfword
+% space between number and unit.  Use loose for full word.
+\usepackage{units}
+
 %\usepackage{xspace}
-%\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \usepackage{color}
 
@@ -39,13 +44,23 @@
 
 % Display captions with the Figure text in boldface (bf), hanging indents and 
 % one size smaller than the rest of the text
-\usepackage[hang, bf, small, subfigure]{caption2}
+\usepackage[hang, bf, small]{caption}
+
+% There's a subtle interaction between hyperref and algorithm included below, 
+% which can be resolved by including float before hyperref and algorithm after it.
+\usepackage{float}
 
 % Enable hyperlink references in PDF file
 
 \usepackage[plainpages=false, pdfpagelabels]{hyperref}
 % For listing of code in the document
 
+% enable typesetting of algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\Return}[1]{\State \textbf{return}~#1}
+
+% For listing of code in the document
 \usepackage{listings}
 
 \usepackage{longtable}
@@ -53,13 +68,21 @@
 % For nicer table rules 
 
 \usepackage{booktabs}
+
 % Set the length of space above \toprule (to stop the table head from colliding with the table):
 \setlength{\abovetopsep}{1em}
 
 % Fancy chapter headings
-\usepackage[Conny]{fncychap}
+\usepackage{fncychap}
+\ChNameUpperCase
+\ChNumVar{\Huge}
+\ChTitleUpperCase
+\ChRuleWidth{2pt}
+\ChNameVar{\centering\Huge\rm\bfseries}
+\ChTitleVar{\centering\Huge\rm}
 \ChTitleVar{\centering\Huge\mdseries\sffamily}
 \ChRuleWidth{1pt}
+
 \usepackage{fancyhdr}
 
 % Nomenclature list
@@ -96,7 +119,7 @@
 \newcommand{\matlab}{{\scshape Matlab}}
 
 % Typeset a differential fraction (dx/dy)
-\newcommand\dfrac[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand\ddfrac[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
 
 % Enviroments
 % overview environment for an overview of each chapter
