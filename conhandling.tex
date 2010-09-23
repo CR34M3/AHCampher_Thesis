@@ -1,0 +1,30 @@
+\chapter{Constraint Handling}\label{chap:conhand}
+\begin{overview}
+  [Constraint handling overview...]
+\end{overview}
+
+%%% OTHER SECTIONS - LAYOUT
+\section{Interactivity}
+\citet{vinsonphd} presents a list of issues that limit the performace of MPCs
+(with specific attention to DMCplus) and proposes methods (using the 
+operability index) to solve these problems. Most of these methods are directly
+applicable to the proposed contraint handling method of this document. The
+issues identified by \citet{vinsonphd} as well as additions are shown in table
+\ref{tab:mpcissues}.
+
+\begin{table}[htbp]
+  \caption[Methods for improving the working and understanding of MPCs]
+    {Methods for improving the working and understanding of MPCs}
+  \label{tab:mpcissues}
+  \centering
+  \begin{tabular}{p{5cm} p{5cm} p{5cm}}
+    \toprule
+    Issues hampering MPC potential & Current solution & Proposed solution \\
+    \midrule
+    Noise & Limit MV stepsize & Idication from OI \\
+    Cons vs Opt & Increase limits & Indication from OI \\
+    Dist effect on CVs & Misc & CV MV shapes calc dist effect \\
+    Tuning dynamic resp & Move supp & OI guidance \\
+    \bottomrule
+  \end{tabular}
+\end{table}
