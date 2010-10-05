@@ -6,7 +6,7 @@
   defined. Finally, a summary of the mathematical techniques used is given.
 \end{overview}
 
-\section{Model Predictive Control}
+\section{Model Predictive Control}\label{sec:mpclit}
 Since its successful implementation in the petrochemical industry, model
 predictive control (MPC) has gained widespread acceptance in the processing 
 sector \citep[1]{maciejowskimpc}. This has led to the development of many 
@@ -95,15 +95,59 @@ ranges rather than on set-points.
 The method of constraint handling, as presented in this document, stems largely
 from work done by Georgakis and colleagues, in particular \citet{vinsonphd},
 \citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}.
-The following sections give an overview of process operability techniques
-and proceeds to clearly define operability index of \citet{vinsonphd}.
+To place the operability index of \citet{vinsonphd} (defined in section
+\ref{sec:oi}) in context, a short overview of the most common process 
+operability techniques is presented below.
 \subsection{Overview}
-\subsection{Operability Index}
+The subject of process operability is an ongoing field of study with many of
+the methods available being qualitative \citep[164]{skogestad}. A distinction
+is made between steady-state and dynamic operability methods. Whereas the later
+considers dynamic criteria, steady-state operability measures evaluate the
+relationship of process inputs and outputs at steady-state only.
+\subsubsection{Steady-state operability measures}
+The relative gain array (RGA) is one of the most used operability measures
+\citep[576]{luyben} and relates input/output interactivity. Each element in the
+RGA ($\beta_{ij}$) is defined as the ratio of the steady-state gain ratios 
+between input, $i$, and output, $j$, when all other inputs are constant and
+when all other outputs are constant. \citet{artrdg} defined the RDG, which 
+expanded on the RGA to include the effect of disturbances. Noting that the
+values of the RGA can be ``misleading'' \citep[87]{skogestad}, the use of norms
+such as the RGA-number are prefered.
+
+The Niederlinski index is another measure that uses only steady-state gains of
+the process model \citep[572-573]{luyben}. This index is considered necessary
+but not sufficient, as positive values of the Niederlinski are inconclusive to
+the stability of the system \citep[445]{skogestad}.
+
+Singular value decomposition stems from the use of eigenvalues as an operability
+measure. The use of singular values are prefered as eigenvalues are a poor
+measure of gain and can often be misleading \citep[75]{skogestad}. Maximum and
+minimum singular values are mostly used to select controlled variables but can
+also be used as a performance measure along with the condition number
+(\citet[596]{luyben}, \citet[80-82]{skogestad}).
+
+\subsubsection{Dynamic operability measures}
+The RGA can be expanded to contain frequency-dependant terms and is often
+refered to as the dynamic relative gain array (DRGA) \citep[637]{marlin}. The
+RDG \citep{artrdg} can be expanded in a similar way to include frequency-
+dependant terms.
+
+Nyquist array methods as defined by Rosenbrock, as quoted by 
+\citet[92]{skogestad}, are an extention of the SISO Nyquist stability criteria 
+that include frequency dynamics. The two methods developed are the direct
+Nyquist array and the inverse Nyquist array. When used in conjuction with
+Gershgorin bands, conditions for overall stability can be derived
+\citep[440]{skogestad}.
+
+\citet{vinsonphd} lists other dynamic operability measures which rely on the 
+choice of a controller type. Further shortcomings of the abovementioned 
+operability measures are also discussed in that text. 
+
+\subsection{Operability Index}\label{sec:oi}
 The operability index was defined by \citet{vinsonphd} as a measure of steady-
 state process operability. Constraint interdependence is used as the basis of
-this index. Further work by \citet{limaphd} expanded this index to dynamic
-systems. This expansion, however, only focuses on a specific class of dynamic
-behavior and cannot be considered optimal.
+this index. Further work by \citet{limaphd} expanded this index to cover
+non-square systems and some application to dynamic systems.
 %% EXPAND
 \subsubsection{Definitions}
 The operability index focuses on input-output relationships rather the system's
@@ -181,19 +225,64 @@ are not shown here.
 
 All the concepts above are directly applicable to square systems. For the case
 of non-square systems (more outputs than inputs) the operability index
-formulation is extended to interval operability. \citet{limaphd} elaborates
-on this and defines the following concepts:
-[insert Lima]
-%% ADD LIMA PHD FORMULATION - CONDENSE!!! %%
-% Vinson notes:
-% "LP - linear programming"
-% "defining the DOS this way will be described as interval/subset operability"
-% "As long as DOS intersects AOS, process is operable"
-% "Less robust process than when whole AOS lies in DOS."
+formulation is extended to interval operability. In this case, process outputs
+are split into two categories; setpoint controlled variables and range
+controlled variables. The first being controlled on a given setpoint, whereas 
+the later is allowed to vary within its given maximum and minium limits.
+
+\citet{limaphd} elaborates on the interval operability of linear non-square 
+systems and defines the following concepts:
+\begin{itemize}
+  \item The interval AOS (AOS$_I$); which is the union of all AOS($d$) where
+    is within the EDS. This is typically generated by the shifting of
+    AOS($d=0$) in the directions determined by $G_d$ (the disturbance model).
+  \item The Achievable Output Interval Set (AOIS); defined as a rectangle
+    with the same aspect ratio as the DOS, bound by the lines (or hyperplanes)
+    that correspond to the minimum and maximum values of $d$ in the AOS. Noting
+    that the issue of interval operability is being addressed, the AOIS does
+    not need to be strictly contained within the AOS$_I$.
+\end{itemize}
+The thesis of \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as
+shown in equation \ref{eq:hvr}. The aim being here to define a measure for
+obtaining tighter control on CVs by reducing the size of the DOS (without
+causing infeasibilities). The process remains interval controllable as long as 
+the AOIS remains a subset of the DOS (AOIS$\subseteq$DOS).
+\begin{equation}
+  \label{eq:hvr}
+    HVR = \frac{\mu(DOS)}{\mu(AOIS)}
+\end{equation}
+To change the relative importance (tightness of control) on variables, weights
+are imposed on the AOIS. This in turn affects the aspect ratio of the AOIS.
+
+\citet{limaphd} proposes two methods to calculate an AOIS for higher dimensional
+systems; an iterative method and a method based on linear programming. In both 
+cases, this corresponds to the tightest set of output constraints which still 
+render the system controllable. Both methods are briefly discussed below;
+\begin{itemize}
+  \item Iterative approach; this method relies on the use of computation
+    geometry tools to calculate convex hulls and intersections. An AOIS is 
+    initially estimated and expanded until it intersects the extreme subsets of
+    the AOS. The magnitude by which the AOIS is increased is calculated using
+    the Secant and bisection method. The calculations contained in this method
+    are computationally intensive and limit its use to systems of 8 dimensions
+    and lower.
+  \item LP approach; in this approach the constraints and objective function
+    are reformulated as linear functions. The extreme subsets of the AOS are
+    expressed as linear inequalities and objective function set up as to
+    determine the common intersection point of the AOIS and a given extreme
+    subset. The proposed LP approach overcomes the computational intensity of
+    the iterative method and is suitable for online calculation of the AOIS.
+\end{itemize}
 
 \subsubsection{Application}
-Numerous authors have illustrated the application of the operability index.
-%% INSERT OI USE REFS %%
+Numerous authors have illustrated the application of the operability index (OI).
+\citet{opconproc} focus on a general application of the OI, emphasising its
+ability to identify inoperable processes without the need to specify a
+controller structure. \citet{opidealrx} applies the OI to the design of ideal
+reactors. The analysis of a vinyl acetate reactor produced interesting results
+regarding the mapping of the AIS to the AOS. It was shown that for certain
+classes of non-linear systems, the AIS boundaries do not map to the boundaries
+of the AOS.
 
 Although the  operability index can be used with square or non-square, linear
 or non-linear models, its easiest application is to linear models. This is
@@ -234,4 +323,5 @@ Table~\ref{tab:mpcoi} summarises these properties and applications.
 % Polynomial
 % (Other)
 \subsection{Techniques}
-% Topology (etc.)
+% Topology...
+% Convex hulls
