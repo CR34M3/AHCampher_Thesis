@@ -1,37 +1,25 @@
 \chapter{Background Literature}\label{chap:lit}
 \begin{overview}
-  A literature overview on model predictive control and controller constraints
-  is presented in this chapter. Process operability is reviewed and the
-  operability index -- used as the basis for constraint interaction -- is 
-  defined. Finally, a summary of the mathematical techniques used is given.
+  A literature overview on model predictive control and controller constraints   is presented in this chapter.
+Process operability is reviewed and the   operability index -- used as the basis for constraint interaction -- is   defined.  
+Finally, a summary of the mathematical techniques used is given.
 \end{overview}
 
 \section{Model Predictive Control}\label{sec:mpclit}
-Since its successful implementation in the petrochemical industry, model
-predictive control (MPC) has gained widespread acceptance in the processing 
-sector \citep[1]{maciejowskimpc}. This has led to the development of many 
-commercial MPC packages such as DMCplus (Aspentech), RMPCT (Honeywell),
-Connoisseur (Invensys) and SMOC (Shell Global Solutions) \citep{qinbadgwell}.
+Since its successful implementation in the petrochemical industry, model predictive control (MPC) has gained widespread acceptance in the processing sector \citep[1]{maciejowskimpc}. 
+This has led to the development of many commercial MPC packages such as DMCplus (Aspentech), RMPCT (Honeywell), Connoisseur (Invensys) and SMOC (Shell Global Solutions) \citep{qinbadgwell}.
 \subsection{Control theory}
-Model predictive control differs from other model based control techniques (such
- as Inverse Nyquist Array- and Internal Model Control) in its active use of 
-predictions for future process outcomes \citep[137]{maciejowskifb}. In this 
-context, MPC further distinguishes itself from other predictive control
-techniques in its ability to accommodate constraints on inputs and outputs.
+Model predictive control differs from other model based control techniques (such  as Inverse Nyquist Array- and Internal Model Control) in its active use of predictions for future process outcomes \citep[137]{maciejowskifb}. 
+In this context, MPC further distinguishes itself from other predictive control techniques in its ability to accommodate constraints on inputs and outputs.
 
-\citet[8]{maciejowskimpc} summarises the control methodology of MPC in four 
-steps; Measure, Predict, Optimize/Calculate and Apply. Along with 
-figure~\ref{fig:mpc:general} these steps are summarized below;
+\citet[8]{maciejowskimpc} summarises the control methodology of MPC in four steps; Measure, Predict, Optimize/Calculate and Apply. 
+Along with figure~\ref{fig:mpc:general} these steps are summarized below;
 %TODO - add symbols to list
 \begin{enumerate}
-  \item Measure; the current outputs are measured and the error (deviation from
-    the set-point trajectory) is calculated.
-  \item Predict; using the model, future outputs are calculated (over the 
-    prediction horizon).
-  \item Optimize/Calculate; control moves (over the control horizon) are now
-    calculated to minimize the predicted deviation from the set-point trajectory.
-  \item Apply; only the first control move is implemented, where-after this 
-    procedure is restarted.
+  \item Measure; the current outputs are measured and the error (deviation from the set-point trajectory) is calculated.
+  \item Predict; using the model, future outputs are calculated (over the prediction horizon).
+  \item Optimize/Calculate; control moves (over the control horizon) are now calculated to minimize the predicted deviation from the set-point trajectory.
+  \item Apply; only the first control move is implemented, where-after this procedure is restarted.
 \end{enumerate}
 \begin{figure}[htbp]
   \centering
@@ -42,25 +30,21 @@ figure~\ref{fig:mpc:general} these steps are summarized below;
 \end{figure}
 
 \subsection{Objective functions}
-Optimal control moves are determined by means of objective functions. These 
-functions are often referred to as cost functions \citep[41]{maciejowskimpc} as
-they can incorporate input/output weighting based on economic factors.
+Optimal control moves are determined by means of objective functions.
+These functions are often referred to as cost functions \citep[41]{maciejowskimpc} as they can incorporate input/output weighting based on economic factors.
 
-The general formulation of the unconstrained objective function is presented in
-equation~\ref{eq:genobjfn}. Modifications to this function (due to constraints)
-is discussed in section~\ref{sec:conobjfn}. From \citet[17]{rawlings} and
-\citet[41]{maciejowskimpc}, the objective function which penalizes deviations
-from the set-point trajectory as well as moves in the inputs is shown below;
+The general formulation of the unconstrained objective function is presented in equation~\ref{eq:genobjfn}. 
+Modifications to this function (due to constraints) is discussed in section~\ref{sec:conobjfn}. 
+From \citet[17]{rawlings} and \citet[41]{maciejowskimpc}, the objective function which penalizes deviations from the set-point trajectory as well as moves in the inputs is shown below;
 % TODO - eqn in terms of zero setpoint, generalize to non-zero sp
 \begin{equation}
   \label{eq:genobjfn}
   V(x(0),{\bf u})=\frac{1}{2}\sum^{N-1}_{k=0}[x(k)'Qx(k)+u(k)'Ru(k)]
   + \frac{1}{2}x(N)'P_fx(N)
 \end{equation}
-It is clear that the objective function depends on both the state sequence and
-the input sequence. The current state, $x(0)$ is known (measured) and the 
-subsequent states are determined by the model and the input sequence. The
-optimal MPC control problem therefore becomes;
+It is clear that the objective function depends on both the state sequence and the input sequence. 
+The current state, $x(0)$ is known (measured) and the subsequent states are determined by the model and the input sequence. 
+The optimal MPC control problem therefore becomes;
 \begin{equation}
   \label{eq:opctrlprob}
   \min_{\bf u} V(x(0),{\bf u})
@@ -70,20 +54,15 @@ optimal MPC control problem therefore becomes;
 \subsubsection{Pulse response models}
 \subsubsection{Other model types}
 \subsection{Tuning}
-As far as the objective function (equation~\ref{eq:genobjfn}) is concerned, the
-most prominent tuning parameters for MPC is the weighting matrices $Q$, $R$ and
-$P_f$. These are used to enforce the relative importance of deviations in both
-the inputs and outputs.
+As far as the objective function (equation~\ref{eq:genobjfn}) is concerned, the most prominent tuning parameters for MPC is the weighting matrices $Q$, $R$ and $P_f$. 
+These are used to enforce the relative importance of deviations in both the inputs and outputs.
 
-The weighting matrices are by no means the only tuning parameters for MPCs;
-additional parameters include the horizons used for predictions, the reference
-trajectory and the auxiliary models used (e.g. disturbance models). Chapter 7
-of \citet{maciejowskimpc} covers the tuning of MPCs in some detail.
+The weighting matrices are by no means the only tuning parameters for MPCs; additional parameters include the horizons used for predictions, the reference trajectory and the auxiliary models used (e.g. disturbance models). 
+Chapter 7 of \citet{maciejowskimpc} covers the tuning of MPCs in some detail.
 
 \section{Constraints in MPC}
-When used in conjunction with a steady-state optimizer, MPCs are able to operate
-with more CVs than MVs \citet{vinsonphd}. Control of the CVs are now within
-ranges rather than on set-points.
+When used in conjunction with a steady-state optimizer, MPCs are able to operate with more CVs than MVs \citet{vinsonphd}. 
+Control of the CVs are now within ranges rather than on set-points.
 \subsection{Constrained objective functions}\label{sec:conobjfn}
 \subsection{Control constraints}
 \subsection{Optimization constraints}
@@ -92,92 +71,62 @@ ranges rather than on set-points.
 \subsection{Effect on solutions}
 
 \section{Process Operability}
-The method of constraint handling, as presented in this document, stems largely
-from work done by Georgakis and colleagues, in particular \citet{vinsonphd},
-\citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}.
-To place the operability index of \citet{vinsonphd} (defined in section
-\ref{sec:oi}) in context, a short overview of the most common process 
-operability techniques is presented below.
+The method of constraint handling, as presented in this document, stems largely from work done by Georgakis and colleagues, in particular \citet{vinsonphd}, \citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}. 
+To place the operability index of \citet{vinsonphd} (defined in section \ref{sec:oi}) in context, a short overview of the most common process operability techniques is presented below.
 \subsection{Overview}
-The subject of process operability is an ongoing field of study with many of
-the methods available being qualitative \citep[164]{skogestad}. A distinction
-is made between steady-state and dynamic operability methods. Whereas the later
-considers dynamic criteria, steady-state operability measures evaluate the
-relationship of process inputs and outputs at steady-state only.
+The subject of process operability is an ongoing field of study with many of the methods available being qualitative \citep[164]{skogestad}. 
+A distinction is made between steady-state and dynamic operability methods. 
+Whereas the later considers dynamic criteria, steady-state operability measures evaluate the relationship of process inputs and outputs at steady-state only.
 \subsubsection{Steady-state operability measures}
-The relative gain array (RGA) is one of the most used operability measures
-\citep[576]{luyben} and relates input/output interactivity. Each element in the
-RGA ($\beta_{ij}$) is defined as the ratio of the steady-state gain ratios 
-between input, $i$, and output, $j$, when all other inputs are constant and
-when all other outputs are constant. \citet{artrdg} defined the RDG, which 
-expanded on the RGA to include the effect of disturbances. Noting that the
-values of the RGA can be ``misleading'' \citep[87]{skogestad}, the use of norms
-such as the RGA-number are prefered.
+The relative gain array (RGA) is one of the most used operability measures \citep[576]{luyben} and relates input/output interactivity.
+Each element in the RGA ($\beta_{ij}$) is defined as the ratio of the steady-state gain ratios between input, $i$, and output, $j$, when all other inputs are constant and when all other outputs are constant.
+\citet{artrdg} defined the RDG, which expanded on the RGA to include the effect of disturbances. 
+Noting that the values of the RGA can be ``misleading'' \citep[87]{skogestad}, the use of norms such as the RGA-number are preferred.
 
-The Niederlinski index is another measure that uses only steady-state gains of
-the process model \citep[572-573]{luyben}. This index is considered necessary
-but not sufficient, as positive values of the Niederlinski are inconclusive to
-the stability of the system \citep[445]{skogestad}.
+The Niederlinski index is another measure that uses only steady-state gains of the process model \citep[572-573]{luyben}. 
+This index is considered necessary but not sufficient, as positive values of the Niederlinski are inconclusive to the stability of the system \citep[445]{skogestad}.
 
-Singular value decomposition stems from the use of eigenvalues as an operability
-measure. The use of singular values are prefered as eigenvalues are a poor
-measure of gain and can often be misleading \citep[75]{skogestad}. Maximum and
-minimum singular values are mostly used to select controlled variables but can
-also be used as a performance measure along with the condition number
-(\citet[596]{luyben}, \citet[80-82]{skogestad}).
+Singular value decomposition stems from the use of eigenvalues as an operability measure. 
+The use of singular values are preferred as eigenvalues are a poor
+measure of gain and can often be misleading \citep[75]{skogestad}.
+Maximum and minimum singular values are mostly used to select controlled variables but can also be used as a performance measure along with the condition number (\citet[596]{luyben}, \citet[80-82]{skogestad}).
 
 \subsubsection{Dynamic operability measures}
-The RGA can be expanded to contain frequency-dependant terms and is often
-refered to as the dynamic relative gain array (DRGA) \citep[637]{marlin}. The
-RDG \citep{artrdg} can be expanded in a similar way to include frequency-
-dependant terms.
+The RGA can be expanded to contain frequency-dependant terms and is often referred to as the dynamic relative gain array (DRGA) \citep[637]{marlin}. 
+The RDG \citep{artrdg} can be expanded in a similar way to include frequency-dependant terms.
 
-Nyquist array methods as defined by Rosenbrock, as quoted by 
-\citet[92]{skogestad}, are an extention of the SISO Nyquist stability criteria 
-that include frequency dynamics. The two methods developed are the direct
-Nyquist array and the inverse Nyquist array. When used in conjuction with
-Gershgorin bands, conditions for overall stability can be derived
-\citep[440]{skogestad}.
+Nyquist array methods as defined by Rosenbrock, as quoted by \citet[92]{skogestad}, are an extension of the SISO Nyquist stability criteria that include frequency dynamics. 
+The two methods developed are the direct Nyquist array and the inverse Nyquist array. 
+When used in conjunction with Gershgorin bands, conditions for overall stability can be derived \citep[440]{skogestad}.
 
-\citet{vinsonphd} lists other dynamic operability measures which rely on the 
-choice of a controller type. Further shortcomings of the abovementioned 
-operability measures are also discussed in that text. 
+\citet{vinsonphd} lists other dynamic operability measures which rely on the choice of a controller type. Further shortcomings of the above mentioned operability measures are also discussed in that text. 
 
 \subsection{Operability Index}\label{sec:oi}
-The operability index was defined by \citet{vinsonphd} as a measure of steady-
-state process operability. Constraint interdependence is used as the basis of
-this index. Further work by \citet{limaphd} expanded this index to cover
-non-square systems and some application to dynamic systems.
+The operability index was defined by \citet{vinsonphd} as a measure of steady-state process operability. 
+Constraint interdependence is used as the basis of this index. 
+Further work by \citet{limaphd} expanded this index to cover non-square systems and some application to dynamic systems.
 %% EXPAND
 \subsubsection{Definitions}
-The operability index focuses on input-output relationships rather the system's
-dynamic states \citep{vinsonphd}. Input and output values are defined by
-'spaces' (in $R^n$). These spaces are the 'feasible regions' which are 
-bounded by the inequalities describing the ranges of the inputs or outputs. The
-following spaces are of interest;
+The operability index focuses on input-output relationships rather the system's dynamic states \citep{vinsonphd}. 
+Input and output values are defined by 'spaces' (in $R^n$). 
+These spaces are the 'feasible regions' which are bounded by the inequalities describing the ranges of the inputs or outputs. 
+The following spaces are of interest;
 \begin{itemize}
-  \item Available Input Space (AIS); the set of values that process inputs can
-    take. The limits on these values are based on both physical limits (e.g.
-    valve openings) or process design values (e.g. flow-rates or temperatures).
-    Figure \ref{fig:sampleais} illustrates an AIS for two variables ($u_1, u_2$)
-    bounded by simple high/low limits.
-  \item Achievable Output Space (AOS); this is the set of values which the 
-    process outputs can obtain, given the AIS. The AIS maps to the AOS by means
-    of a process model, $G$. Therefore, a point $u$ in the AIS corresponds to
-    a point $y$ in the AOS via $y=G(u)$. Examples of AOSs for linear and
-    non-linear models are shown in figure \ref{fig:sampleaos}.
-  \item Desired Output Space (DOS); this represents the desired output values of
-    the process. These values are typically based on operational and financial
-    parameters. Figure \ref{fig:sampledos} shows a sample DOS for a two output
-    system.
-  \item Expected Disturbance Space (EDS); all the values of the expected 
-    disturbances to the system. In the case of linear models, these values are 
-    translated back to the input space by means of a disturbance model, $G_d$.
-  \item Desired Input Space (DIS); in the same manner that the AIS maps to the
-    AOS, the DIS represents combined reverse mappings of the DOS and EDS. The
-    DIS is calculated as the inputs, $u$, that satisfy the model, ie.
-    $y=G(u,d)$ (with $y$ and $d$ from the DOS and EDS respectively).Figure 
-    \ref{fig:sampledis} shows this combined translation.
+  \item Available Input Space (AIS); the set of values that process      inputs can take. 
+    The limits on these values are based on both physical limits (e.g.     valve openings) or process design values (e.g. flow-rates or temperatures). 
+Figure \ref{fig:sampleais} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high/low limits.
+  \item Achievable Output Space (AOS); this is the set of values which the process outputs can obtain, given the AIS. 
+The AIS maps to the AOS by means of a process model, $G$. 
+Therefore, a point $u$ in the AIS corresponds to a point $y$ in the AOS via $y=G(u)$. 
+Examples of AOSs for linear and non-linear models are shown in figure \ref{fig:sampleaos}.
+  \item Desired Output Space (DOS); this represents the desired output values of the process. 
+These values are typically based on operational and financial   parameters. 
+Figure \ref{fig:sampledos} shows a sample DOS for a two output    system.
+  \item Expected Disturbance Space (EDS); all the values of the expected disturbances to the system. 
+In the case of linear models, these values are translated back to the input space by means of a disturbance model, $G_d$.
+  \item Desired Input Space (DIS); in the same manner that the AIS maps to the AOS, the DIS represents combined reverse mappings of the DOS and EDS.
+The DIS is calculated as the inputs, $u$, that satisfy the model, ie. $y=G(u,d)$ (with $y$ and $d$ from the DOS and EDS respectively).
+Figure \ref{fig:sampledis} shows this combined translation.
 \end{itemize}
 
 %% MAYBE USE ONE BIG FIGURE FOR ALL SPACES?
@@ -212,84 +161,62 @@ following spaces are of interest;
   \label{fig:sampledis}
 \end{figure}
 
-\citet{vinsonphd} proceeds to define the generalised Output Operability Index
-(OOI) as shown in equation \ref{eq:genooi}. Where $\mu$ represents a function
-to calculate the volume of a space. From this definition it is clear that the
-controlability of a process decreases if the DIS does not cover the whole AIS.
-Servo- and regulatory operability indices are also defined in the text, but 
-are not shown here.
+\citet{vinsonphd} proceeds to define the generalised Output Operability Index (OOI) as shown in equation \ref{eq:genooi}. 
+Where $\mu$ represents a function to calculate the volume of a space.
+From this definition it is clear that the controlability of a process decreases if the DIS does not cover the whole AIS. 
+Servo- and regulatory operability indices are also defined in the text, but are not shown here.
 \begin{equation}
   \label{eq:genooi}
      OOI = \frac{\mu(AIS\cap DIS)}{\mu(DIS)}
 \end{equation}
 
-All the concepts above are directly applicable to square systems. For the case
-of non-square systems (more outputs than inputs) the operability index
-formulation is extended to interval operability. In this case, process outputs
-are split into two categories; setpoint controlled variables and range
-controlled variables. The first being controlled on a given setpoint, whereas 
-the later is allowed to vary within its given maximum and minium limits.
+All the concepts above are directly applicable to square systems.
+For the case of non-square systems (more outputs than inputs) the operability index formulation is extended to interval operability. 
+In this case, process outputs are split into two categories; setpoint controlled variables and range controlled variables.
+The first being controlled on a given setpoint, whereas the later is allowed to vary within its given maximum and minimum limits.
 
-\citet{limaphd} elaborates on the interval operability of linear non-square 
-systems and defines the following concepts:
+\citet{limaphd} elaborates on the interval operability of linear non-square systems and defines the following concepts:
 \begin{itemize}
-  \item The interval AOS (AOS$_I$); which is the union of all AOS($d$) where
-    is within the EDS. This is typically generated by the shifting of
-    AOS($d=0$) in the directions determined by $G_d$ (the disturbance model).
-  \item The Achievable Output Interval Set (AOIS); defined as a rectangle
-    with the same aspect ratio as the DOS, bound by the lines (or hyperplanes)
-    that correspond to the minimum and maximum values of $d$ in the AOS. Noting
-    that the issue of interval operability is being addressed, the AOIS does
-    not need to be strictly contained within the AOS$_I$.
+  \item The interval AOS (AOS$_I$); which is the union of all AOS($d$) where is within the EDS. 
+This is typically generated by the shifting of AOS($d=0$) in the directions determined by $G_d$ (the disturbance model).
+  \item The Achievable Output Interval Set (AOIS); defined as a rectangle with the same aspect ratio as the DOS, bound by the lines (or hyperplanes) that correspond to the minimum and maximum values of $d$ in the AOS. 
+Noting that the issue of interval operability is being addressed, the AOIS does not need to be strictly contained within the AOS$_I$.
 \end{itemize}
-The thesis of \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as
-shown in equation \ref{eq:hvr}. The aim being here to define a measure for
-obtaining tighter control on CVs by reducing the size of the DOS (without
-causing infeasibilities). The process remains interval controllable as long as 
-the AOIS remains a subset of the DOS (AOIS$\subseteq$DOS).
+The thesis of \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as shown in equation \ref{eq:hvr}. 
+The aim being here to define a measure for obtaining tighter control on CVs by reducing the size of the DOS (without causing infeasibilities). 
+The process remains interval controllable as long as the AOIS remains a subset of the DOS (AOIS$\subseteq$DOS).
 \begin{equation}
   \label{eq:hvr}
     HVR = \frac{\mu(DOS)}{\mu(AOIS)}
 \end{equation}
-To change the relative importance (tightness of control) on variables, weights
-are imposed on the AOIS. This in turn affects the aspect ratio of the AOIS.
+To change the relative importance (tightness of control) on variables, weights are imposed on the AOIS. 
+This in turn affects the aspect ratio of the AOIS.
 
-\citet{limaphd} proposes two methods to calculate an AOIS for higher dimensional
-systems; an iterative method and a method based on linear programming. In both 
-cases, this corresponds to the tightest set of output constraints which still 
-render the system controllable. Both methods are briefly discussed below;
+\citet{limaphd} proposes two methods to calculate an AOIS for higher dimensional systems; an iterative method and a method based on linear programming. 
+In both cases, this corresponds to the tightest set of output constraints which still render the system controllable. 
+Both methods are briefly discussed below;
 \begin{itemize}
-  \item Iterative approach; this method relies on the use of computation
-    geometry tools to calculate convex hulls and intersections. An AOIS is 
-    initially estimated and expanded until it intersects the extreme subsets of
-    the AOS. The magnitude by which the AOIS is increased is calculated using
-    the Secant and bisection method. The calculations contained in this method
-    are computationally intensive and limit its use to systems of 8 dimensions
-    and lower.
-  \item LP approach; in this approach the constraints and objective function
-    are reformulated as linear functions. The extreme subsets of the AOS are
-    expressed as linear inequalities and objective function set up as to
-    determine the common intersection point of the AOIS and a given extreme
-    subset. The proposed LP approach overcomes the computational intensity of
-    the iterative method and is suitable for online calculation of the AOIS.
+  \item Iterative approach; this method relies on the use of computational geometry tools to calculate convex hulls and intersections. 
+An AOIS is initially estimated and expanded until it intersects the extreme subsets of the AOS. 
+The magnitude by which the AOIS is increased is calculated using the Secant and bisection method. 
+The calculations contained in this method are computationally intensive and limit its use to systems of 8 dimensions and lower.
+  \item LP approach; in this approach the constraints and objective function are reformulated as linear functions. 
+The extreme subsets of the AOS are expressed as linear inequalities and objective function set up as to determine the common intersection point of the AOIS and a given extreme subset. 
+The proposed LP approach overcomes the computational intensity of the iterative method and is suitable for online calculation of the AOIS.
 \end{itemize}
 
 \subsubsection{Application}
-Numerous authors have illustrated the application of the operability index (OI).
-\citet{opconproc} focus on a general application of the OI, emphasising its
-ability to identify inoperable processes without the need to specify a
-controller structure. \citet{opidealrx} applies the OI to the design of ideal
-reactors. The analysis of a vinyl acetate reactor produced interesting results
-regarding the mapping of the AIS to the AOS. It was shown that for certain
-classes of non-linear systems, the AIS boundaries do not map to the boundaries
-of the AOS.
+Numerous authors have illustrated the application of the operability index (OI). 
+\citet{opconproc} focus on a general application of the OI, emphasising its ability to identify inoperable processes without the need to specify a controller structure. 
+\citet{opidealrx} applies the OI to the design of ideal reactors. 
+The analysis of a vinyl acetate reactor produced interesting results
+regarding the mapping of the AIS to the AOS. 
+It was shown that for certain classes of non-linear systems, the AIS boundaries do not map to the boundaries of the AOS.
 
-Although the  operability index can be used with square or non-square, linear
-or non-linear models, its easiest application is to linear models. This is
-advantageous as most of the current MPCs use linear models \citep{vinsonphd}.
+Although the  operability index can be used with square or non-square, linear or non-linear models, its easiest application is to linear models. 
+This is advantageous as most of the current MPCs use linear models \citep{vinsonphd}.
 
-\citet{vinsonphd} highlights some properties of MPC (in particular DMCplus)
-which lends themselves to the  application of the operability index. 
+\citet{vinsonphd} highlights some properties of MPC (in particular DMCplus) which lends themselves to the  application of the operability index.
 Table~\ref{tab:mpcoi} summarises these properties and applications.
 \begin{table}[htbp]
   \centering
@@ -300,18 +227,10 @@ Table~\ref{tab:mpcoi} summarises these properties and applications.
       \toprule
       MPC property & Operability index property \\
       \midrule
-      Linear process models & Calculation of the relevant spaces (AOS and DIS)
-                              is usually fast.\\
-      Constraints on MVs and 
-      CVs                   & In the case of fixed constraints; the input/
-                              output constraints result in polytopes in both
-                              the input/output spaces. From these descriptions
-                              the framework of operability index can be directly
-                              applied.\\
-      Solution of MV and CV 
-      steady state targets  & Where an LP solver is used, the operability index
-                              can yield useful information about process
-                              characteristics.\\
+      Linear process models & Calculation of the relevant spaces (AOS and DIS) is usually fast.\\
+      Constraints on MVs and CVs & In the case of fixed constraints; the input/output constraints result in polytopes in both the input/output spaces. 
+From these descriptions the framework of operability index can be directly applied.\\
+      Solution of MV and CV steady state targets  & Where an LP solver is used, the operability index can yield useful information about process characteristics.\\
       \bottomrule
     \end{tabular}
 \end{table}

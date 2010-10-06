@@ -5,11 +5,9 @@
 
 %%% OTHER SECTIONS - LAYOUT
 \section{Interactivity}
-\citet{vinsonphd} presents a list of issues that limit the performace of MPCs
-(with specific attention to DMCplus) and proposes methods (using the 
-operability index) to solve these problems. Most of these methods are directly
-applicable to the proposed contraint handling method of this document. The
-issues identified by \citet{vinsonphd} as well as additions are shown in table
+\citet{vinsonphd} presents a list of issues that limit the performance of MPCs (with specific attention to DMCplus) and proposes methods (using the operability index) to solve these problems. 
+Most of these methods are directly applicable to the proposed constraint handling method of this document. 
+The issues identified by \citet{vinsonphd} as well as additions are shown in table
 \ref{tab:mpcissues}.
 \begin{landscape}
 \begin{table}[htbp]
@@ -21,38 +19,28 @@ issues identified by \citet{vinsonphd} as well as additions are shown in table
     \toprule
     Issues hampering MPC potential & Current solution & Proposed solution \\
     \midrule
-    Processes with considerable noise cause targets to move with each
-      controller execution.
-      & Limit MV stepsize or filter CVs. Both of these have a stabalizing effect
-        but result in a more sluggish controller. These limits may also cause
-        the controller to not reach optimum solutions.
-      & Using the OI and the associated output spaces, the possible outputs of
-        a (newly) limited input space is clearly shown.\\
-    Constraints on MV can cause CVs to not reach their maximum/minimum
-    contraints. These CV constraints usually correspond with economically
-    optimal solutions. 
-      & Increase/Adjust the MV limits. 
-      & The spaces associated with the OI would make it clear to what extent
-        MV limits can be adjusted and how they would affect the output space.\\
-    Disturbances can cause CVs to violate constraints. In some cases, the
-    controller might give up on a constraint and continue (now using a subset
-    of the CVs).
-      & Possible solutions include; model re-identification (in the case of an
-        inconsistency), fixing the source of the disturbance or adding a DV to
-        account for the disturbance.
-      & Due to the fixed constraints on MVs and CVs the resulting AIS and DOS
-        can be used to calculate the controller's ability to reject a
-        disturbance. A measure of controller robustness can be derived from
-        this.\\
-    Move Suppression factors for MVs and Equal Concern Errors (give-ups) for 
-    CVs are used to tune MPCs for dynamic performance.
-      & The choice of these factors are usually qualitative and according to 
-        guidelines (and validated via offline simulations).
-      & The OI (and its associated spaces) can provide guidance in determining
-        move suppression factors and give-ups. The difficulty in controlling
-        a CV at a given constraint can be derived from the OI. How far a CV
-        constraint can be moved (given the MV constraints) can also be
-        determined from the OI.\\
+Processes with considerable noise cause targets to move with each controller execution.
+& Limit MV stepsize or filter CVs. 
+Both of these have a stabilizing effect but result in a more sluggish controller. 
+These limits may also cause the controller to not reach optimum solutions.
+& Using the OI and the associated output spaces, the possible outputs of a (newly) limited input space is clearly shown.\\
+    
+Constraints on MV can cause CVs to not reach their maximum/minimum constraints. 
+These CV constraints usually correspond with economically optimal solutions. 
+& Increase/Adjust the MV limits. 
+& The spaces associated with the OI would make it clear to what extent MV limits can be adjusted and how they would affect the output space.\\
+
+Disturbances can cause CVs to violate constraints. 
+In some cases, the controller might give up on a constraint and continue (now using a subset of the CVs).
+& Possible solutions include; model re-identification (in the case of an inconsistency), fixing the source of the disturbance or adding a DV to account for the disturbance.
+& Due to the fixed constraints on MVs and CVs the resulting AIS and DOS can be used to calculate the controller's ability to reject a disturbance. 
+A measure of controller robustness can be derived from this.\\
+    
+Move Suppression factors for MVs and Equal Concern Errors (give-ups) for CVs are used to tune MPCs for dynamic performance.
+& The choice of these factors are usually qualitative and according to guidelines (and validated via offline simulations).
+& The OI (and its associated spaces) can provide guidance in determining move suppression factors and give-ups. 
+The difficulty in controlling a CV at a given constraint can be derived from the OI. 
+How far a CV constraint can be moved (given the MV constraints) can also be determined from the OI.\\
     \bottomrule
   \end{tabular}
 \end{table}
