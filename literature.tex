@@ -1,4 +1,4 @@
-\chapter{Background Literature}\label{chap:lit}
+\chapter{Literature Overview}\label{chap:lit}
 \begin{overview}
   A literature overview on model predictive control and controller constraints   is presented in this chapter.
 Process operability is reviewed and the   operability index -- used as the basis for constraint interaction -- is   defined.  
@@ -8,6 +8,14 @@ Finally, a summary of the mathematical techniques used is given.
 \section{Model Predictive Control}\label{sec:mpclit}
 Since its successful implementation in the petrochemical industry, model predictive control (MPC) has gained widespread acceptance in the processing sector \citep[1]{maciejowskimpc}. 
 This has led to the development of many commercial MPC packages such as DMCplus (Aspentech), RMPCT (Honeywell), Connoisseur (Invensys) and SMOC (Shell Global Solutions) \citep{qinbadgwell}.
+\subsection{Nomenclature and notation}
+For the sake of coherence between sources a set nomenclature and notation scheme will be used. 
+The following variables are defined; $x$ refer to the states of the system, $y$ to the outputs and $u$ to the inputs.
+Where vectors are concerned (the MIMO case), a bold face character is used, e.g. $\vect{x}$ for $x$.
+Matrices are distinguished by the use of capitals.
+
+For discrete time forms, $k$ is used to denote the sample number.
+For simplicity of notation, indices are used to refer to samples, i.e. $x_{k+1}$ instead of $x(k+1)$.
 \subsection{Control theory}
 Model predictive control differs from other model based control techniques (such  as Inverse Nyquist Array- and Internal Model Control) in its active use of predictions for future process outcomes \citep[137]{maciejowskifb}. 
 In this context, MPC further distinguishes itself from other predictive control techniques in its ability to accommodate constraints on inputs and outputs.
@@ -29,6 +37,68 @@ Along with figure~\ref{fig:mpc:general} these steps are summarized below;
 %TODO - fix figure to use coherent nomenclature
 \end{figure}
 
+\subsection{Models}
+The correct choice of model is one of the most important steps in the operation of MPCs \citep[17]{rossiter}.
+This is due to the active use of the model in making predictions as the controller runs, and not serving merely as an analysis aid \citep[37]{maciejowskimpc}.
+
+The use of linear models in MPC is common practice.
+Important reasons for this are; no assurance of convergence of solutions and optimization being non-trivial in the case of non-linear models \citep[17]{rossiter}.
+\subsubsection{State space models}
+State space models are the most encountered type in literature.
+The general, linear, time-variant, state space model is presented in equation \ref{eq:genss}.
+\begin{align}
+  \label{eq:genss}
+  \ddfrac{\vect{x}}{t} &= A(t)\vect{x} + B(t)\vect{u} \notag \\
+  \vect{y} &= C(t)\vect{x} + D(t)\vect{u} \\
+  \vect{x}(0) &= \vect{x}_0 \notag
+\end{align}
+Where $A(t),~B(t),~C(t)$ and $D(t)$ are appropriately sized matrices of the state space model, and $\vect{x}_0$ is the initial state of the system.
+For the time-invariant case, these matrices simply reduce to $A(t),~B(t),~C(t)$ and $D(t)$. 
+As MPC is mostly implemented at discreet time steps, the model in equation \ref{eq:genss} (for the time-invariant case) translates to equation \ref{eq:genssdisc}.
+\begin{align}
+  \label{eq:genssdisc}
+  \vect{x}_{k+1} &= A\vect{x}_k + B\vect{u}_k \notag \\
+  \vect{y}_k &= C\vect{x}_k + D\vect{u}_k \\
+  \vect{x}_0 &~ \text{(given)} \notag
+\end{align}
+
+\subsubsection{Step and pulse response models}
+Step and pulse response models, especially finite impulse response (FIR) models, were widely used in the original descriptions of MPC.
+There has, however, been a recent trend to move to other model types, such as transfer function models \citepp{113}{maciejowskimpc}{26}{rossiter}.
+
+The pulse response model can be defined using the common convolution model \citep[284]{luyben}, as shown in equation \ref{eq:fir}.
+Where $H$ is a matrix representing the response of an output to a unit pulse in the corresponding input.
+\begin{equation}
+  \label{eq:fir}
+  \vect{y}(t) = \sum^t_{k=0}H(t-k)\vect{u}_k
+\end{equation} 
+Even though the FIR models are intuitive they are not without shortcomings.
+The most prominent of these problems are that FIR models are only applicable to asymptotically stable plants, and they are only adequate if the CVs are measured outputs.
+\citet[109]{maciejowskimpc} elaborates on this topic.
+
+\subsubsection{Transfer function models}
+In the Laplace domain, the input/output relationship of a generic process (as shown in figure \ref{fig:genmodel}) represented by
+\begin{equation*}
+  \vect{\bar y}(s)=G(s)\vect{\bar u}(s)
+\end{equation*}
+where $G$ is the process matrix, and $\vect{\bar u}$ and $\vect{\bar y}$ are the process inputs and outputs (in deviation variables) respectively.
+The process matrix ($G$) can contain dynamic elements or, in the case of a steady-state model, only gains.
+Note that state ($\vect{x}$) information do not appear in the transfer function formulation.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{graph/model_genprocess}
+  \caption[Generic input/output model]{Generic process showing inputs ($\vect{\bar y}$), model ($G$) and outputs ($\vect{\bar x}$).}
+  \label{fig:genmodel}
+\end{figure}
+With the assumption of an initial zero state ($\vect{x}_0=0$), the state space description (the time-invariant case) can be converted to a transfer function description.
+Taking the Laplace transform of equation \ref{eq:genss}, and rearranging, results in equation \ref{eq:gentf};
+\begin{align}
+  \label{eq:gentf}
+    \vect{\bar x}(s) &= (sI-A)^{-1}B\vect{\bar u}(s) \\
+    \vect{\bar y}(s) &= (C(sI-A)^{-1}B+D)\vect{\bar u}(s) \notag
+\end{align} 
+\subsubsection{Other model types}
+
 \subsection{Objective functions}
 Optimal control moves are determined by means of objective functions.
 These functions are often referred to as cost functions \citep[41]{maciejowskimpc} as they can incorporate input/output weighting based on economic factors.
@@ -39,20 +109,17 @@ From \citet[17]{rawlings} and \citet[41]{maciejowskimpc}, the objective function
 % TODO - eqn in terms of zero setpoint, generalize to non-zero sp
 \begin{equation}
   \label{eq:genobjfn}
-  V(x(0),{\bf u})=\frac{1}{2}\sum^{N-1}_{k=0}[x(k)'Qx(k)+u(k)'Ru(k)]
-  + \frac{1}{2}x(N)'P_fx(N)
+  V(\vect{x}_0,\vect{u})=\frac{1}{2}\sum^{N-1}_{k=0}[\vect{x}_k'Q\vect{x}_k + \vect{u}_k'R\vect{u}_k]
+  + \frac{1}{2}\vect{x}_N'P_f\vect{x}_N
 \end{equation}
 It is clear that the objective function depends on both the state sequence and the input sequence. 
-The current state, $x(0)$ is known (measured) and the subsequent states are determined by the model and the input sequence. 
+The current state, $\vect{x}_0$ is known (measured) and the subsequent states are determined by the model and the input sequence. 
 The optimal MPC control problem therefore becomes;
 \begin{equation}
   \label{eq:opctrlprob}
-  \min_{\bf u} V(x(0),{\bf u})
+  \min_{\vect{u}} V(\vect{x}_0,{\bf u})
 \end{equation}
-\subsection{Models}
-\subsubsection{Impulse response models}
-\subsubsection{Pulse response models}
-\subsubsection{Other model types}
+
 \subsection{Tuning}
 As far as the objective function (equation~\ref{eq:genobjfn}) is concerned, the most prominent tuning parameters for MPC is the weighting matrices $Q$, $R$ and $P_f$. 
 These are used to enforce the relative importance of deviations in both the inputs and outputs.
@@ -89,7 +156,7 @@ This index is considered necessary but not sufficient, as positive values of the
 Singular value decomposition stems from the use of eigenvalues as an operability measure. 
 The use of singular values are preferred as eigenvalues are a poor
 measure of gain and can often be misleading \citep[75]{skogestad}.
-Maximum and minimum singular values are mostly used to select controlled variables but can also be used as a performance measure along with the condition number (\citet[596]{luyben}, \citet[80-82]{skogestad}).
+Maximum and minimum singular values are mostly used to select controlled variables but can also be used as a performance measure along with the condition number \citepp{596}{luyben}{80-82}{skogestad}.
 
 \subsubsection{Dynamic operability measures}
 The RGA can be expanded to contain frequency-dependant terms and is often referred to as the dynamic relative gain array (DRGA) \citep[637]{marlin}. 
