@@ -41,8 +41,6 @@ Along with figure~\ref{fig:mpc:general} these steps are summarized below;
 The correct choice of model is one of the most important steps in the operation of MPCs \citep[17]{rossiter}.
 This is due to the active use of the model in making predictions as the controller runs, and not serving merely as an analysis aid \citep[37]{maciejowskimpc}.
 
-The use of linear models in MPC is common practice.
-Important reasons for this are; no assurance of convergence of solutions and optimization being non-trivial in the case of non-linear models \citep[17]{rossiter}.
 \subsubsection{State space models}
 State space models are the most encountered type in literature.
 The general, linear, time-variant, state space model is presented in equation \ref{eq:genss}.
@@ -98,6 +96,12 @@ Taking the Laplace transform of equation \ref{eq:genss}, and rearranging, result
     \vect{\bar y}(s) &= (C(sI-A)^{-1}B+D)\vect{\bar u}(s) \notag
 \end{align} 
 \subsubsection{Other model types}
+Some other model types are used in MPCs, most are however derived from or reformulations of the above mentioned types.
+Examples include; distributed models \citep[4]{rawlings}, CARIMA models and matrix fraction descriptions \citep[24,28]{rossiter} -- with the later two stemming from transfer function descriptions.
+
+It should be noted that even though only linear models have been presented in this section, many MPCs are capable of using non-linear models.
+The use of linear models in MPC is, however, common practice.
+Important reasons for this are; no assurance of convergence of solutions and optimization being non-trivial for non-linear models \citep[17]{rossiter}.
 
 \subsection{Objective functions}
 Optimal control moves are determined by means of objective functions.
@@ -130,12 +134,36 @@ Chapter 7 of \citet{maciejowskimpc} covers the tuning of MPCs in some detail.
 \section{Constraints in MPC}
 When used in conjunction with a steady-state optimizer, MPCs are able to operate with more CVs than MVs \citet{vinsonphd}. 
 Control of the CVs are now within ranges rather than on set-points.
-\subsection{Constrained objective functions}\label{sec:conobjfn}
-\subsection{Control constraints}
-\subsection{Optimization constraints}
+% DO SOMETHING HERE
+\subsection{Constraint formulation}
+Constraints on the inputs or outputs of a system can be represented as sets of linear inequalities.
+For the most general case, they can be expressed as follows;
+\begin{align}
+  \label{eq:gencons}
+  A_u\vect{u}_k &\leq b_u \notag \\
+  A_y\vect{y}_k &\leq b_y
+\end{align}
+where $A_u$ and $A_y$ are coefficient matrices, and $b_u$ and $b_y$ the half-space offsets.
+For the case where only upper and lower bounds on variables exist, $A_u$ and $b_u$ reduce to;
+\begin{align*}
+  A_u={I\brack -I} \qquad b_u={\vect{u}^{max}_k \brack -\vect{u}^{min}_k}
+\end{align*}
+where $\vect{u}^{max}_k$ and $\vect{u}^{min}_k$ correspond to the upper and lower limits of $\vect{u}_k$ respectively \citep[6]{rawlings}. 
+$A_y$ and $b_y$ reduced similarly for the outputs.
 
-\subsection{Effect on models}
+For constraints on rate of change of inputs, the formulation is similar to equation \ref{eq:gencons}.
+The change in $\vect{u}_k$ during a sampling instance is now considered thus;
+\begin{align*}
+  A_{\Delta u}\Delta \vect{u}_k &\leq b_{\Delta u} \notag \\
+  \text{and}~~ \Delta \vect{u}_k &= \vect{u}_{k+1}-\vect{u}_k
+\end{align*}
+
+\subsection{Constrained objective functions}\label{sec:conobjfn}
 \subsection{Effect on solutions}
+\subsection{Constraint types}
+\subsubsection{Physical constraints}
+\subsubsection{Control constraints}
+\subsubsection{Optimization constraints}
 
 \section{Process Operability}
 The method of constraint handling, as presented in this document, stems largely from work done by Georgakis and colleagues, in particular \citet{vinsonphd}, \citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}. 
@@ -269,7 +297,7 @@ The magnitude by which the AOIS is increased is calculated using the Secant and 
 The calculations contained in this method are computationally intensive and limit its use to systems of 8 dimensions and lower.
   \item LP approach; in this approach the constraints and objective function are reformulated as linear functions. 
 The extreme subsets of the AOS are expressed as linear inequalities and objective function set up as to determine the common intersection point of the AOIS and a given extreme subset. 
-The proposed LP approach overcomes the computational intensity of the iterative method and is suitable for online calculation of the AOIS.
+The proposed LP approach overcomes the computational intensity of the iterative method and is suitable for on-line calculation of the AOIS.
 \end{itemize}
 
 \subsubsection{Application}
