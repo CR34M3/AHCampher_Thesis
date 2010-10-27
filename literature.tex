@@ -132,24 +132,53 @@ The weighting matrices are by no means the only tuning parameters for MPCs; addi
 Chapter 7 of \citet{maciejowskimpc} covers the tuning of MPCs in some detail.
 
 \section{Constraints in MPC}
+The implementation of constraints is probably the most important selling point of MPCs.
 When used in conjunction with a steady-state optimizer, MPCs are able to operate with more CVs than MVs \citet{vinsonphd}. 
 Control of the CVs are now within ranges rather than on set-points.
 % DO SOMETHING HERE
+
+\subsection{Constraint types}
+A multitude of constraints and constraint types are present in the MPC algorithm.
+The following section lists these constraints and give a short description of their function and properties.
+\subsubsection{Control constraints}
+Often called ``hard'' constraints, these constraints are used for control (as opposed to optimization) and are never violated.
+Control constraints exist for both outputs and inputs, and typically sort into two categories;
+\begin{itemize}
+  \item The constraints on inputs are typically physical constraints.
+    Examples are valve saturation limits, tank levels and maximum heat      duties.
+    Control constraints on outputs are usually concerned with safety and damage to equipment.
+  \item Another class of control constraints (usually on outputs) are concerned with product quality and are thus operational in nature.
+\end{itemize}
+
+\subsubsection{Optimization constraints}
+The constraints implemented by the optimizers in MPC are often called ``soft'' constraints.
+These constraints are typically determined by operational and economical factors.
+These constraints are usually implemented in two forms;
+\begin{itemize}
+\item Constraints to regulate dynamic behaviour, such as ``funnels''.
+Examples of these are given in chapter \ref{chap:background}.
+\item Steady-state constraints which usually represent the optimal solutions of some external cost function.
+The limits of these constraints are contained within the control constraints mentioned above.
+\end{itemize}
+As these constraints are usually not critical, situations exist where these constraints are violated in an attempt to ensure feasibility of the MPC solution.
+This is discussed further in section \ref{sec:coneffsol}.
+ 
 \subsection{Constraint formulation}
 Constraints on the inputs or outputs of a system can be represented as sets of linear inequalities.
 For the most general case, they can be expressed as follows;
 \begin{align}
   \label{eq:gencons}
   A_u\vect{u}_k &\leq b_u \notag \\
-  A_y\vect{y}_k &\leq b_y
+  A_y\vect{y}_k &\leq b_y \\
+  A_x\vect{x}_k &\leq b_x \notag
 \end{align}
-where $A_u$ and $A_y$ are coefficient matrices, and $b_u$ and $b_y$ the half-space offsets.
+where $A_u,~A_y$ and $A_x$ are coefficient matrices, and $b_u,~b_y$ and $b_x$ the half-space offsets.
 For the case where only upper and lower bounds on variables exist, $A_u$ and $b_u$ reduce to;
 \begin{align*}
   A_u={I\brack -I} \qquad b_u={\vect{u}^{max}_k \brack -\vect{u}^{min}_k}
 \end{align*}
 where $\vect{u}^{max}_k$ and $\vect{u}^{min}_k$ correspond to the upper and lower limits of $\vect{u}_k$ respectively \citep[6]{rawlings}. 
-$A_y$ and $b_y$ reduced similarly for the outputs.
+The coefficient matrices and offsets are reduced similarly for the outputs and the states.
 
 For constraints on rate of change of inputs, the formulation is similar to equation \ref{eq:gencons}.
 The change in $\vect{u}_k$ during a sampling instance is now considered thus;
@@ -159,19 +188,36 @@ The change in $\vect{u}_k$ during a sampling instance is now considered thus;
 \end{align*}
 
 \subsection{Constrained objective functions}\label{sec:conobjfn}
-\subsection{Effect on solutions}
-\subsection{Constraint types}
-\subsubsection{Physical constraints}
-\subsubsection{Control constraints}
-\subsubsection{Optimization constraints}
+When constraints are present, the general objective function (equation \ref{eq:genobjfn}), now subject to equation \ref{eq:gencons} can be reformulated as a quadratic programming (QP) problem.
+This makes the problem convex and has favourable consequences for the solution of the optimization (discussed in section \ref{sec:coneffsol}).
+
+The mathematical description of the QP problem is omitted from this dissertation, but \citet[81-83]{maciejowskimpc} as well as \citet[489-490]{rawlings} can be consulted for the complete reformulation.
+
+\subsection{Effect on solutions}\label{sec:coneffsol}
+As mentioned in section \ref{sec:conobjfn}, the reformulation of the objective function and constraints into a QP problem -- and the subsequent convexity of the optimization -- affects the solution in numerous ways.
+\citet[83]{maciejowskimpc} lists some of the solution properties obtained; namely that the termination of the QP problem is guaranteed and that computation time can be calculated.
+
+Constrained optimization does however suffer from the problem of possible infeasibilities. 
+For commercial MPCs the solvers are usually custom built to provide a ``back-up'' solution in the case of infeasibilities.
+This back-up solution usually consists of modifying constraints (hence the term ``constraint handling'').
+The most common methods of doing this are listed below;
+\begin{itemize}
+\item Constraint softening, where constraints are prioritized and then relaxed (or removed) until feasibility is obtained \citep[160]{rossiter}.
+\item Using constraint windows which define a horizon over which constraints are enforced.
+Feasibility can now be obtained by changing the start and end-time of this window \citep[281-282]{maciejowskimpc}.
+\item Back offs and borders can be defined, effectively changing all constraints into ``soft'' constraints.
+Due to the conservative approach, setting the back off amounts therefore becomes a feasibility assurance and performance compromise \citepp{161}{rossiter}{282}{maciejowskimpc}.
+\end{itemize}
 
 \section{Process Operability}
 The method of constraint handling, as presented in this document, stems largely from work done by Georgakis and colleagues, in particular \citet{vinsonphd}, \citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}. 
 To place the operability index of \citet{vinsonphd} (defined in section \ref{sec:oi}) in context, a short overview of the most common process operability techniques is presented below.
+
 \subsection{Overview}
 The subject of process operability is an ongoing field of study with many of the methods available being qualitative \citep[164]{skogestad}. 
 A distinction is made between steady-state and dynamic operability methods. 
 Whereas the later considers dynamic criteria, steady-state operability measures evaluate the relationship of process inputs and outputs at steady-state only.
+
 \subsubsection{Steady-state operability measures}
 The relative gain array (RGA) is one of the most used operability measures \citep[576]{luyben} and relates input/output interactivity.
 Each element in the RGA ($\beta_{ij}$) is defined as the ratio of the steady-state gain ratios between input, $i$, and output, $j$, when all other inputs are constant and when all other outputs are constant.
@@ -203,7 +249,7 @@ Further work by \citet{limaphd} expanded this index to cover non-square systems 
 %% EXPAND
 \subsubsection{Definitions}
 The operability index focuses on input-output relationships rather the system's dynamic states \citep{vinsonphd}. 
-Input and output values are defined by 'spaces' (in $R^n$). 
+Input and output values are defined by 'spaces' (in $\mathbb{R}^n$). 
 These spaces are the 'feasible regions' which are bounded by the inequalities describing the ranges of the inputs or outputs. 
 The following spaces are of interest;
 \begin{itemize}
@@ -339,3 +385,8 @@ From these descriptions the framework of operability index can be directly appli
 \subsection{Techniques}
 % Topology...
 % Convex hulls
+% Linear transformation
+
+% Local Variables:
+% TeX-master: "AHC_thesis"
+% End:
