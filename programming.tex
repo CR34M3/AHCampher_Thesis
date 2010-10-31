@@ -1,4 +1,4 @@
-\chapter{Programming}\label{chap:prog}
+\chapter{Programming and Method}\label{chap:prog}
 \begin{overview}
   The software developed for this project is described in this chapter.
   Attention is given to the following aspects;
@@ -97,7 +97,7 @@ This method can produce duplicate vertices; the output is therefore checked and 
 \section{Constraint set fitting}\label{sec:confit}
 The fitting of a constraint set within another can be used to reduce the control problem.
 Typically, a set with fewer constraints is fitted into an existing set whilst still maintaining the largest possible operating region.
-In mathematical terms, the problem consists of fitting the largest volume polytope (with a specified number of faces) within another polytope (with more faces than the fitted polytope).
+In mathematical terms, the problem consists of fitting the largest volume polytope (with a specified number of facets) within another polytope (with more facets than the fitted polytope).
 
 This seemingly trivial optimization problem is not covered in this form in available literature.
 A similar problem is that of optimized diamond cutting \citep{diamondcut} which maximises the volume of a diamond within a rough stone.
@@ -106,7 +106,7 @@ Another well considered problem in literature is the packing problem, which invo
 Again, the shapes considered in this problem are of fixed dimensions (and aspect ratios), but the largest dissimilarity is that a number of shapes are fitted, not just a single one.
 
 \subsection{Problem formulation}
-Each half-space -- or the faces of a shape -- represents a constraint.
+Each half-space -- or the facets of a shape -- represents a constraint.
 The constraint set can therefore be described by equation \ref{eq:cset}, where $A$ is the half-plane slope matrix and $\vect{b}$ the offsets.
 \begin{equation}
   \label{eq:cset}
@@ -114,13 +114,13 @@ The constraint set can therefore be described by equation \ref{eq:cset}, where $
 \end{equation}
 In $n$ dimensions, the general problem now becomes; 
 \begin{itemize}
-  \item given a polytope, $P_o$, having $k$ faces,
-  \item fit a polytope, $P_i$, with $l$ faces (where $n+1 \leq l \le k$) within $P_o$, and
+  \item given a polytope, $P_o$, having $l$ facets,
+  \item fit a polytope, $P_i$, with $k$ facets (where $n+1 \leq k \le l$) within $P_o$, and
   \item maximise the volume of $P_i$.
 \end{itemize} 
-Note that with the specification of the number of faces, the dimensions of $A$ and $\vect{b}$ for both $P_i$ and $P_o$ are fixed.
-For $P_o$, $A$ is an $k \times n$ matrix and $\vect{b}$ is a $k \times 1$ vector.
-For $P_i$, $A$ is an $l \times n$ matrix and $\vect{b}$ is a $l \times 1$ vector.
+Note that with the specification of the number of facets, the dimensions of $A$ and $\vect{b}$ for both $P_i$ and $P_o$ are fixed.
+For $P_o$, $A$ is an $l \times n$ matrix and $\vect{b}$ is a $l \times 1$ vector.
+For $P_i$, $A$ is an $k \times n$ matrix and $\vect{b}$ is a $k \times 1$ vector.
 
 Expressed as a minimization problem, the fitting of an arbitrary shape  becomes equation \ref{eq:arbvolmin}.
 \begin{align}
@@ -139,8 +139,8 @@ In this description $\vect{b}$ is the only input variable (of size $2n \times 1$
                     &P_i \text{~and~} P_o \text{~convex} \notag
 \end{align}
 
-\subsubsection{Face formulation}
-The minimization problems formulated in equations \ref{eq:arbvolmin} and \ref{eq:recvolmin} are based on the faces $P_i$.
+\subsubsection{Facet formulation}
+The minimization problems formulated in equations \ref{eq:arbvolmin} and \ref{eq:recvolmin} are based on the facets $P_i$.
 $A$ and $\vect{b}$ are the input variables for the minimization.
 From these two variables the vertices of $P_i$ are calculated and subsequently the volume.
 
@@ -188,7 +188,7 @@ It needs to be noted that $A$ and $\vect{b}$ will now only result from the final
 
 The vertex based formulation has the following advantages;
 \begin{itemize}
-  \item This approach is more intuitive as the fitting problem, conceptually, involves moving the vertices of $P_i$ to the faces of $P_o$.
+  \item This approach is more intuitive as the fitting problem, conceptually, involves moving the vertices of $P_i$ to the facets of $P_o$.
   \item Checking that $P_i$ is inside $P_o$ is now a direct operation, as vertices don't need to be calculated from $A$ and $\vect{b}$ first.
   \item When a measure of containment needs to be generated, consistent gradient information can be expressed in terms of each vertex of $P_i$.
 \end{itemize}
@@ -197,12 +197,12 @@ Most of the problems with the vertex based method stems from the movement of ver
 These internal points are now no longer vertices, but are still considered in the optimization.
 This formulation was abandoned in this project due to the following disadvantages in its implementation;
 \begin{itemize}
-  \item A clear correlation between the number of vertices and the number of faces on a shape does not exist.
-Figure \ref{fig:vertsvsfaces} illustrates this concept for two 6-faced, 3 dimensional shapes.
-This is a major problem when the amount of faces (constraints) on $P_i$ needs to be specified.
-  \item A slightly different problem than the one mentioned above -- the number of faces on $P_i$ is determined by the final optimised vertices.
-Internal points and duplicate vertices in the solution will cause the number of faces to decrease.
-Therefore, specification of a set number of faces becomes nearly impossible.
+  \item A clear correlation between the number of vertices and the number of facets on a shape does not exist.
+Figure \ref{fig:vertsvsfaces} illustrates this concept for two 6-faceted, 3 dimensional shapes.
+This is a major problem when the amount of facets (constraints) on $P_i$ needs to be specified.
+  \item A slightly different problem than the one mentioned above -- the number of facets on $P_i$ is determined by the final optimised vertices.
+Internal points and duplicate vertices in the solution will cause the number of facets to decrease.
+Therefore, specification of a set number of facets becomes nearly impossible.
   \item Enforcing convexity becomes a problem when vertices are used directly.
 This is caused by the movement of vertices inside the convex hull of $P_i$.
 If all points are to be vertices by definition, non-convex shapes are generated.
@@ -215,20 +215,76 @@ This results in decreased sensitivity of objective functions.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=8cm]{graph/vertsvsfaces}
-  \caption[The unclear correlation between number of faces and vertices]{A cube and a pentagonal pyramid in 3 dimensions -- both shapes have 6 faces, but differ in their amount of vertices (8 and 6  respectively).}
+  \caption[The unclear correlation between number of facets and vertices]{A cube and a pentagonal pyramid in 3 dimensions -- both shapes have 6 facets, but differ in their amount of vertices (8 and 6  respectively).}
   \label{fig:vertsvsfaces}
 \end{figure}
 
 \subsection{Optimization}
+For the solution of the problem, two optimizers/solvers were considered.
+Both are contained in the SciPy \texttt{optimize} module;
+\begin{itemize}
+  \item A sequential least squares quadratic programming (SLSQP) algorithm, \texttt{fmin\_slsqp}, henceforth simply referred to as SLSQP. 
+This is a gradient based, constrained solver.
+  \item A downhill-simplex algorithm, \texttt{fmin}, henceforth simply referred to as simplex.
+This is an unconstrained solver.
+\end{itemize}
+
+\subsubsection{Objective functions}
+For SLSQP a combination of equality and inequality constraints were used.
+The constrained problem formulation for SLSQP is shown in equation \ref{eq:slsqpobjfn} and follows from equation \ref{eq:arbvolmin}.
+Note that the criteria that $P_i$ should be convex is satisfied by using linear inequalities ($A\vect{x} \leq \vect{b}$) for its construction.
+The convexity of $P_o$ is assumed to be a given.
+\begin{align}
+  \label{eq:slsqpobjfn}
+    \min_{A,~\vect{b}}~~&\text{-volume}_{P_i}\\
+    \text{s.t.}~~~~ &\text{norm}(\vect{b}) = 1 \notag \\
+                    &\text{vertices}_{P_i} \text{~satisfy~} (A\vect{x}\leq\vect{b})_{P_o} \notag  
+\end{align}
+
+The constraints as imposed on SLSQP is not possible for simplex.
+A penalty formulation for the objective function is therefore used.
+Equation \ref{eq:fminobjfn} shows the objective function for use with simplex.
+The same argument for convexity holds as with SLSQP.
+\begin{align}
+  \label{eq:fminobjfn}
+    \min_{A,~\vect{b}}~~&\text{-volume}_{P_i} + p_A(\text{norm}(\text{distance of vertices$_{P_i}$ outside}~P_o)) + p_B(|\text{norm}(\vect{b}) - 1|)  
+\end{align}
+where $p_A$ and $p_B$ are penalty weights.
+
+The same objective functions (equations \ref{eq:slsqpobjfn} and \ref{eq:fminobjfn}) hold for the fitting of rectangular constraint sets.
+Only difference begin that $\vect{b}$ is the only input variable and $A$ has a fixed shape (as shown in equation \ref{eq:recvolmin}).
+
+\subsubsection{Shape exceptions}
+Two types of shape exceptions are handled during the optimization.
+Firstly, shape inversion (as shown in figure \ref{fig:shapeinversion}) is handled by giving a sign to the volume.
+A sufficient criteria for an open shape is when any one of the vertices violate any one of the constraints used to generate the shape.
+If a shape is open, the internal volume is calculated and given a negative sign.
+
+The second class of shape exceptions is that of unbound shapes.
+These shapes are generated when enough constraints (used to generate the shape) are parallel, causing the shape to be unbound.
+Note that the difference between these open shapes and those resulting from shape inversion is that there are no internal vertices.
+In this event, a large bounding $n$-cube is placed around $P_o$, closing the shape but generating vertices that are external to $P_o$.
+This method was chosen as opposed to returning an infinite volume.
 
 \subsection{Starting point generation}
+For the minimization problem, starting point need to be generated.
+A different method for starting point generation is utilized for arbitrary shape fitting and rectangular shape fitting respectively.
 
-\subsection{Rectangle fitting}
+Both methods generate a starting shape around the centroid of $P_o$.
+With the assumption of convexity the centroid is simply calculated as the average of all the vertices of $P_o$.
 
-\subsection{Shape fitting}
+For arbitrary shapes, $k-1$ random Gaussian vectors are generated and projected to points on an $n$-sphere (centered around $P_o$'s centroid).
+A final vector is generated to ensure a closed shape.
+This vector is the negative of the resultant of the first $k-1$ vectors.
+Tangential planes to the $n$-sphere at each of the $k$ points are generated.
+Finally, the sphere is scaled by a 1\% scaling factor so that the resulting $k$-faceted shape is within $P_o$ (to the largest extent).
+
+For rectangular shapes a deterministic starting point is generated.
+An $n$-cube is generated around $P_o$'s centroid.
+This cube is then scaled by a 1\% scaling factor to be within $P_o$ (to the largest extent).
 
 
-
+%DO THE CODE FOR SURFACE VERTICES AND ADD...
 
 
 % Local Variables:
