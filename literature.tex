@@ -43,7 +43,7 @@ This is due to the active use of the model in making predictions as the controll
 
 \subsubsection{State space models}
 State space models are the most encountered type in literature.
-The general, linear, time-variant, state space model is presented in equation \ref{eq:genss}.
+The general, linear, time-variant, state space model is presented in equation~\ref{eq:genss}.
 \begin{align}
   \label{eq:genss}
   \ddfrac{\vect{x}}{t} &= A(t)\vect{x} + B(t)\vect{u} \notag \\
@@ -52,7 +52,7 @@ The general, linear, time-variant, state space model is presented in equation \r
 \end{align}
 Where $A(t),~B(t),~C(t)$ and $D(t)$ are appropriately sized matrices of the state space model, and $\vect{x}_0$ is the initial state of the system.
 For the time-invariant case, these matrices simply reduce to $A(t),~B(t),~C(t)$ and $D(t)$. 
-As MPC is mostly implemented at discreet time steps, the model in equation \ref{eq:genss} (for the time-invariant case) translates to equation \ref{eq:genssdisc}.
+As MPC is mostly implemented at discreet time steps, the model in equation~\ref{eq:genss} (for the time-invariant case) translates to equation~\ref{eq:genssdisc}.
 \begin{align}
   \label{eq:genssdisc}
   \vect{x}_{k+1} &= A\vect{x}_k + B\vect{u}_k \notag \\
@@ -64,7 +64,7 @@ As MPC is mostly implemented at discreet time steps, the model in equation \ref{
 Step and pulse response models, especially finite impulse response (FIR) models, were widely used in the original descriptions of MPC.
 There has, however, been a recent trend to move to other model types, such as transfer function models \citepp{113}{maciejowskimpc}{26}{rossiter}.
 
-The pulse response model can be defined using the common convolution model \citep[284]{luyben}, as shown in equation \ref{eq:fir}.
+The pulse response model can be defined using the common convolution model \citep[284]{luyben}, as shown in equation~\ref{eq:fir}.
 Where $H$ is a matrix representing the response of an output to a unit pulse in the corresponding input.
 \begin{equation}
   \label{eq:fir}
@@ -75,7 +75,7 @@ The most prominent of these problems are that FIR models are only applicable to 
 \citet[109]{maciejowskimpc} elaborates on this topic.
 
 \subsubsection{Transfer function models}
-In the Laplace domain, the input/output relationship of a generic process (as shown in figure \ref{fig:genmodel}) represented by
+In the Laplace domain, the input/output relationship of a generic process (as shown in figure~\ref{fig:genmodel}) represented by
 \begin{equation*}
   \vect{\bar y}(s)=G(s)\vect{\bar u}(s)
 \end{equation*}
@@ -89,7 +89,7 @@ Note that state ($\vect{x}$) information do not appear in the transfer function 
   \label{fig:genmodel}
 \end{figure}
 With the assumption of an initial zero state ($\vect{x}_0=0$), the state space description (the time-invariant case) can be converted to a transfer function description.
-Taking the Laplace transform of equation \ref{eq:genss}, and rearranging, results in equation \ref{eq:gentf};
+Taking the Laplace transform of equation~\ref{eq:genss}, and rearranging, results in equation~\ref{eq:gentf};
 \begin{align}
   \label{eq:gentf}
     \vect{\bar x}(s) &= (sI-A)^{-1}B\vect{\bar u}(s) \\
@@ -156,12 +156,12 @@ These constraints are typically determined by operational and economical factors
 These constraints are usually implemented in two forms;
 \begin{itemize}
 \item Constraints to regulate dynamic behaviour, such as ``funnels''.
-Examples of these are given in chapter \ref{chap:background}.
+Examples of these are given in chapter~\ref{chap:background}.
 \item Steady-state constraints which usually represent the optimal solutions of some external cost function.
 The limits of these constraints are contained within the control constraints mentioned above.
 \end{itemize}
 As these constraints are usually not critical, situations exist where these constraints are violated in an attempt to ensure feasibility of the MPC solution.
-This is discussed further in section \ref{sec:coneffsol}.
+This is discussed further in section~\ref{sec:coneffsol}.
  
 \subsection{Constraint formulation}
 Constraints on the inputs or outputs of a system can be represented as sets of linear inequalities.
@@ -180,7 +180,7 @@ For the case where only upper and lower bounds on variables exist, $A_u$ and $b_
 where $\vect{u}^{max}_k$ and $\vect{u}^{min}_k$ correspond to the upper and lower limits of $\vect{u}_k$ respectively \citep[6]{rawlings}. 
 The coefficient matrices and offsets are reduced similarly for the outputs and the states.
 
-For constraints on rate of change of inputs, the formulation is similar to equation \ref{eq:gencons}.
+For constraints on rate of change of inputs, the formulation is similar to equation~\ref{eq:gencons}.
 The change in $\vect{u}_k$ during a sampling instance is now considered thus;
 \begin{align*}
   A_{\Delta u}\Delta \vect{u}_k &\leq b_{\Delta u} \notag \\
@@ -188,13 +188,13 @@ The change in $\vect{u}_k$ during a sampling instance is now considered thus;
 \end{align*}
 
 \subsection{Constrained objective functions}\label{sec:conobjfn}
-When constraints are present, the general objective function (equation \ref{eq:genobjfn}), now subject to equation \ref{eq:gencons} can be reformulated as a quadratic programming (QP) problem.
-This makes the problem convex and has favourable consequences for the solution of the optimization (discussed in section \ref{sec:coneffsol}).
+When constraints are present, the general objective function (equation~\ref{eq:genobjfn}), now subject to equation~\ref{eq:gencons} can be reformulated as a quadratic programming (QP) problem.
+This makes the problem convex and has favourable consequences for the solution of the optimization (discussed in section~\ref{sec:coneffsol}).
 
 The mathematical description of the QP problem is omitted from this dissertation, but \citet[81-83]{maciejowskimpc} as well as \citet[489-490]{rawlings} can be consulted for the complete reformulation.
 
 \subsection{Effect on solutions}\label{sec:coneffsol}
-As mentioned in section \ref{sec:conobjfn}, the reformulation of the objective function and constraints into a QP problem -- and the subsequent convexity of the optimization -- affects the solution in numerous ways.
+As mentioned in section~\ref{sec:conobjfn}, the reformulation of the objective function and constraints into a QP problem -- and the subsequent convexity of the optimization -- affects the solution in numerous ways.
 \citet[83]{maciejowskimpc} lists some of the solution properties obtained; namely that the termination of the QP problem is guaranteed and that computation time can be calculated.
 
 Constrained optimization does however suffer from the problem of possible infeasibilities. 
@@ -211,7 +211,7 @@ Due to the conservative approach, setting the back off amounts therefore becomes
 
 \section{Process Operability}
 The method of constraint handling, as presented in this document, stems largely from work done by Georgakis and colleagues, in particular \citet{vinsonphd}, \citet{vinsonartoi}, \citet{limaphd}, \citet{opconproc} and \citet{opidealrx}. 
-To place the operability index of \citet{vinsonphd} (defined in section \ref{sec:oi}) in context, a short overview of the most common process operability techniques is presented below.
+To place the operability index of \citet{vinsonphd} (defined in section~\ref{sec:oi}) in context, a short overview of the most common process operability techniques is presented below.
 
 \subsection{Overview}
 The subject of process operability is an ongoing field of study with many of the methods available being qualitative \citep[164]{skogestad}. 
@@ -255,19 +255,19 @@ The following spaces are of interest;
 \begin{itemize}
   \item Available Input Space (AIS); the set of values that process      inputs can take. 
     The limits on these values are based on both physical limits (e.g.     valve openings) or process design values (e.g. flow-rates or temperatures). 
-Figure \ref{fig:sampleais} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high/low limits.
+Figure~\ref{fig:sampleais} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high/low limits.
   \item Achievable Output Space (AOS); this is the set of values which the process outputs can obtain, given the AIS. 
 The AIS maps to the AOS by means of a process model, $G$. 
 Therefore, a point $u$ in the AIS corresponds to a point $y$ in the AOS via $y=G(u)$. 
-Examples of AOSs for linear and non-linear models are shown in figure \ref{fig:sampleaos}.
+Examples of AOSs for linear and non-linear models are shown in figure~\ref{fig:sampleaos}.
   \item Desired Output Space (DOS); this represents the desired output values of the process. 
 These values are typically based on operational and financial   parameters. 
-Figure \ref{fig:sampledos} shows a sample DOS for a two output    system.
+Figure~\ref{fig:sampledos} shows a sample DOS for a two output    system.
   \item Expected Disturbance Space (EDS); all the values of the expected disturbances to the system. 
 In the case of linear models, these values are translated back to the input space by means of a disturbance model, $G_d$.
   \item Desired Input Space (DIS); in the same manner that the AIS maps to the AOS, the DIS represents combined reverse mappings of the DOS and EDS.
 The DIS is calculated as the inputs, $u$, that satisfy the model, ie. $y=G(u,d)$ (with $y$ and $d$ from the DOS and EDS respectively).
-Figure \ref{fig:sampledis} shows this combined translation.
+Figure~\ref{fig:sampledis} shows this combined translation.
 \end{itemize}
 
 %% MAYBE USE ONE BIG FIGURE FOR ALL SPACES?
@@ -302,7 +302,7 @@ Figure \ref{fig:sampledis} shows this combined translation.
   \label{fig:sampledis}
 \end{figure}
 
-\citet{vinsonphd} proceeds to define the generalised Output Operability Index (OOI) as shown in equation \ref{eq:genooi}. 
+\citet{vinsonphd} proceeds to define the generalised Output Operability Index (OOI) as shown in equation~\ref{eq:genooi}. 
 Where $\mu$ represents a function to calculate the volume of a space.
 From this definition it is clear that the controlability of a process decreases if the DIS does not cover the whole AIS. 
 Servo- and regulatory operability indices are also defined in the text, but are not shown here.
@@ -323,7 +323,7 @@ This is typically generated by the shifting of AOS($d=0$) in the directions dete
   \item The Achievable Output Interval Set (AOIS); defined as a rectangle with the same aspect ratio as the DOS, bound by the lines (or hyperplanes) that correspond to the minimum and maximum values of $d$ in the AOS. 
 Noting that the issue of interval operability is being addressed, the AOIS does not need to be strictly contained within the AOS$_I$.
 \end{itemize}
-The thesis of \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as shown in equation \ref{eq:hvr}. 
+The thesis of \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as shown in equation~\ref{eq:hvr}. 
 The aim being here to define a measure for obtaining tighter control on CVs by reducing the size of the DOS (without causing infeasibilities). 
 The process remains interval controllable as long as the AOIS remains a subset of the DOS (AOIS$\subseteq$DOS).
 \begin{equation}
@@ -378,7 +378,7 @@ From these descriptions the framework of operability index can be directly appli
 
 \section{Mathematical Preliminaries}
 Some mathematical concepts are briefly covered in this section.
-Their application is discussed in chapter \ref{chap:prog}.
+Their application is discussed in chapter~\ref{chap:prog}.
 \subsection{Convex geometry}
 Noting that only convex sets are considered in this project, many properties of convex geometry can be exploited.
 
@@ -391,7 +391,7 @@ A polytope of $n$ dimensions will simply be referred to as an $n$-polytope.
 \end{itemize}
 
 \subsubsection{Half-space geometry}
-Linear constraints (as described in equation \ref{eq:gencons}) are equivalent to half-spaces in $\mathbb{R}^n$ in both their mathematical description and meaning.
+Linear constraints (as described in equation~\ref{eq:gencons}) are equivalent to half-spaces in $\mathbb{R}^n$ in both their mathematical description and meaning.
 From this we can conclude that all polytopes generated by linear constraints (half-spaces) are convex, as they have supporting hyperplanes at each boundary point \citep[21]{manilev}.
 From this it also follows that the intersection of such convex polytopes will be convex.
 This is due to the resulting intersection being merely a subset of the half-spaces defining the two intersecting polytopes.
@@ -433,13 +433,13 @@ The scalars $(\alpha_{ij})_{i=1,\cdots,n;~j=1,\cdots,m}$ can be written as
 \end{equation}
 which is referred to as the matrix of $\phi$ \citep[48-49,~166]{leung}.
 
-Equation \ref{eq:lintrans} is equivalent to the result of the following matrix multiplication
+Equation~\ref{eq:lintrans} is equivalent to the result of the following matrix multiplication
 \begin{equation}
   \label{eq:matmult}
   \Phi X = Y
 \end{equation}
 where $\Phi$ is the matrix of $\phi$.
-Equation \ref{eq:matmult} confirms that matrix multiplication is indeed a linear transformation.
+Equation~\ref{eq:matmult} confirms that matrix multiplication is indeed a linear transformation.
 
 \subsection{Process models}
 The mathematical description of the process models considered in this project are shown below.
@@ -447,7 +447,7 @@ The mathematical description of the process models considered in this project ar
 The steady-state model of a linear system is the gain-matrix.
 This is simply a matrix of constants in $\mathbb{R}$.
 Models like these allow for matrix algebra when transforming between the input and output spaces (and vice versa).
-Obtaining the AOS from the AIS (as shown in figures \ref{fig:sampleais} and \ref{fig:sampleaos}) is a simple matrix multiplication of the vertices of the AIS and the process model matrix.
+Obtaining the AOS from the AIS (as shown in figures~\ref{fig:sampleais} and~\ref{fig:sampleaos}) is a simple matrix multiplication of the vertices of the AIS and the process model matrix.
 % Polynomial
 % (Other)
 

@@ -5,7 +5,7 @@
 \end{overview}
 
 \section{Commercial MPCs}
-The general concepts of MPCs have been discussed in section \ref{sec:mpclit}.
+The general concepts of MPCs have been discussed in section ~\ref{sec:mpclit}.
 This section gives a more detailed description of two popular commercial MPC packages.
 \subsection{Honeywell RMPCT}
 Honeywell's MPC controller, RMPCT, forms part of their advanced process control suite, Profit Suite.
@@ -23,12 +23,12 @@ These model types include;
 \item Laplace domain parametric models.
 \end{itemize}
 The final model, however, is saved in the Laplace domain.
-Discrete models are converted to the {\it s} domain and has a final structure as shown in equation \ref{eq:rmpctmodel}.
+Discrete models are converted to the {\it s} domain and has a final structure as shown in equation~\ref{eq:rmpctmodel}.
 \begin{equation}
   \label{eq:rmpctmodel}
   G(s) = \frac{k(b_{n-1}s^{n-1}+ \cdots b_1s+1)e^{-ds}} {s(a_ns^n+a_{n-1}s^{n-1}+ \cdots a_1s+1)}
 \end{equation}
-The leading {\it s} in the denominator of equation \ref{eq:rmpctmodel} indicates an integrator in any of the sub-processes.
+The leading {\it s} in the denominator of equation~\ref{eq:rmpctmodel} indicates an integrator in any of the sub-processes.
 
 If a third-party model exists, then the model converter in Profit Suite can be used to convert it into a suitable form.
   
@@ -36,7 +36,7 @@ If a third-party model exists, then the model converter in Profit Suite can be u
 For MVs, the implementation of control constraints are in the form of high/low limits and movement limits.
 The high/low limits of MVs are never violated.
 Prioritisation and move suppression of MVs are done by means of weighting factors.
-The movement load is spread across the MVs as per equation \ref{eq:rmpctmvload},
+The movement load is spread across the MVs as per equation~\ref{eq:rmpctmvload},
 \begin{equation}
   \label{eq:rmpctmvload}
   \min \sum_j \Delta u_j^2 \times weight_j^2
@@ -45,7 +45,7 @@ where $j$ is the index of the MV.
 
 CV control constraints are also specified as high/low limits.
 In the event of negative degrees of freedom, constraints are prioritised by means of a give-up factor called the engineering unit (EU) give up.
-Similar to equation \ref{eq:rmpctmvload} the cumulative weighted error on the CVs are minimised as per equation \ref{eq:rmpctcverror} with the $weight$ defined as shown and where $i$ is the CV index.
+Similar to equation~\ref{eq:rmpctmvload} the cumulative weighted error on the CVs are minimised as per equation~\ref{eq:rmpctcverror} with the $weight$ defined as shown and where $i$ is the CV index.
 \begin{align}
   \label{eq:rmpctcverror}
   \min \sum_i weight_i^2 \times error_i^2 \\
@@ -61,7 +61,7 @@ Predefined funnel types can be chosen from;
 \item Type 1, defined as a third of the Type 0 funnel pinched using the feedback performance ratio (FPR), and
 \item Type 2, which is like Type 1 but pinched with the decouple ratio (Type 2 is therefore FPR independent).
 \end{itemize}
-Figure \ref{fig:rmpctfunnel} illustrates the concept of pinching for the RMPCT funnels.
+Figure~\ref{fig:rmpctfunnel} illustrates the concept of pinching for the RMPCT funnels.
 The definitions of the FPR and the decouple ratio are contained in \citet{honeywell1} but omitted from this dissertation.
 \begin{figure}[htbp]
   \centering
@@ -101,9 +101,110 @@ Constraints are ranked and lower rank constraints are considered ``hard'' wherea
 \subsubsection{Interface}
 %% EXPAND
 
-\section{Case studies}
 
 \section{Test problems}
+
+
+\section{Case studies}
+The following actual systems were investigated to test the method, proposed in chapter~\ref{chap:conhand}.
+All rigs investigated are from the Process Modelling and Control laboratory of the University of Pretoria.
+
+\subsection{Level and flow rig}
+\subsubsection{System description}
+The level and flow rig consists of two control valves, a measured flow (to one control valve) and a measured level.
+Figure~\ref{fig:flowphoto} shows the rig along with its process flow diagram.
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=7cm]{graph/flowphoto.JPG}
+    \qquad
+    \includegraphics[width=7cm]{graph/flowpfd}
+  \caption[Level and flow rig photo and flow diagram]{Level and flow rig photo (left) and process flow diagram (right).}
+  \label{fig:flowphoto}
+\end{figure}
+
+\subsubsection{Process model}
+The level and flow rig is modelled as a $2\times2$ system.
+The MVs are the opening fractions of the two valves ($x_1\text{ \& }x_2$), and the CVs are the flow ($F$) and the level ($L$).
+The steady-state gain matrix of this process is shown in equation~\ref{eq:flowmodel}.
+\begin{equation}
+  \label{eq:flowmodel}
+    G_{fl} = \bpm 1 & 0 \\
+                 1 & 1 \\ \epm
+        %GET SCALING VALUES FROM LIZETTE
+             %     L        F
+             % x1 -0.0241   0
+             % x2  0.0056  -0.1287
+\end{equation}
+\subsubsection{Operating conditions}
+The operating conditions for this rig is shown in table~\ref{tab:flowopcon}
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
+    && Low & High & Low & High \\ 
+    \midrule
+    Inputs &$x_1$ & 0 & 1 & 0 & 1 \\
+           &$x_2$ & 0 & 1 & 0 & 1 \\[1.3ex]
+    Outputs &$F~(\ell\text{/min})$  & 0 & 1 & 0 & 1 \\
+            &$L~(\text{cm})$  & 0 & 1 & 0 & 1 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Operating conditions of level and flow rig.}
+  \label{tab:flowopcon}
+\end{table}
+%GET VALUES FROM LIZETTE
+
+\subsection{Laboratory distillation column}
+\subsubsection{System description}
+The second case study considered is a 10-plate distillation column.
+The column is run as a closed system with bottoms and distillate mixed and fed back into the column.
+Figure~\ref{fig:columnphoto} shows a photo of the column along with its process flow diagram.
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=7cm]{graph/columnphoto}
+    \qquad
+    \includegraphics[width=7cm]{graph/columnpfd}
+  \caption[Laboratory distillation column photo and flow diagram]{Laboratory distillation column photo (left) and flow diagram (right).}
+  \label{fig:columnphoto}
+\end{figure}
+
+\subsubsection{System model}
+The process model has been reduced to a $2\times2$ matrix.
+Reflux flowrate ($R$) and the setpoint of plate 10's temperature ($T_{10~sp}$) are the MVs, and the temperatures of plate 1 and 10 ($T_1\text{ \& }T_{10}$) are the CVs.
+Figure~\ref{fig:columnmodel} shows a graphic representation of the column model and equation~\ref{eq:columnmodel} gives the values of the steady-state gain model.
+\begin{equation}
+  \label{eq:columnmodel}
+  G_{col} = \bpm -0.17 & 0.22 \\
+            0    & 1    \\ \epm
+\end{equation}
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=8cm]{graph/columnmodel}
+  \caption[Column model]{Column model showing internal PI controller.}
+  \label{fig:columnmodel}
+\end{figure}
+
+%Elaborate on the PI controller used...
+
+\subsubsection{Operating conditions}
+Table~\ref{tab:columnopcon} shows the operating conditions of the distillation column.
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
+    && Low & High & Low & High \\ 
+    \midrule
+    Inputs &$R~(\ell\text{/min})$    & 0 & 0.5 & 0 & 6.67 \\
+           &$T_{10~sp}~(\degrees{C})$ & 78 & 82 & 0 & 90 \\[1.3ex]
+    Outputs &$T_1~(\degrees{C})$     & 66 & 68 & 15 & 68 \\
+            &$T_{10}~(\degrees{C})$  & 78 & 82 & 25 & 90 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Operating conditions of distillation column.}
+  \label{tab:columnopcon}
+\end{table}
 
 % Local Variables:
 % TeX-master: "AHC_thesis"
