@@ -22,18 +22,18 @@ Processes with considerable noise cause targets to move with each controller exe
 & Limit MV stepsize or filter CVs. 
 Both of these have a stabilizing effect but result in a more sluggish controller. 
 These limits may also cause the controller to not reach optimum solutions.
-& Using the OI and the associated output spaces, the possible outputs of a (newly) limited input space is clearly shown.\\
+& Using the OI and the associated output spaces, the possible outputs of a (newly) limited input space is clearly shown.\\[1.3ex]
     
 Constraints on MV can cause CVs to not reach their maximum/minimum constraints. 
 These CV constraints usually correspond with economically optimal solutions. 
 & Increase/Adjust the MV limits. 
-& The spaces associated with the OI would make it clear to what extent MV limits can be adjusted and how they would affect the output space.\\
+& The spaces associated with the OI would make it clear to what extent MV limits can be adjusted and how they would affect the output space.\\[1.3ex]
 
 Disturbances can cause CVs to violate constraints. 
 In some cases, the controller might give up on a constraint and continue (now using a subset of the CVs).
 & Possible solutions include; model re-identification (in the case of an inconsistency), fixing the source of the disturbance or adding a DV to account for the disturbance.
 & Due to the fixed constraints on MVs and CVs the resulting AIS and DOS can be used to calculate the controller's ability to reject a disturbance. 
-A measure of controller robustness can be derived from this.\\
+A measure of controller robustness can be derived from this.\\[1.3ex]
     
 Move Suppression factors for MVs and Equal Concern Errors (give-ups) for CVs are used to tune MPCs for dynamic performance.
 & The choice of these factors are usually qualitative and according to guidelines (and validated via offline simulations).

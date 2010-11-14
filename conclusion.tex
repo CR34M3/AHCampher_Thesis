@@ -1,15 +1,30 @@
 \chapter{Conclusions and Recommendations}\label{chap:conclusion}
 \begin{overview}
-  The chapter summarises the conclusions drawn from this project and makes 
-  recommendations for further study. The recommendations include;
-  \begin{itemize}
-    \item future work,
-    \item improvements to the method and
-    \item improvements to the user-interface. 
-  \end{itemize}
+  The chapter summarises the conclusions drawn from this project and makes recommendations for further study.
 \end{overview}
 
 \section{Conclusions}
+Form the proposed method of systematic constraint handling, the following conclusions can be made;
+\begin{itemize}
+  \item Specification of unrealistic constraints lead to a low Operability Index and unattainable expectations of both the inputs and outputs of the process.
+  \item Checking constraints via the process model can identify constraint sets that are not attainable. Also, checking changes to constraints via the process model allows for a measure of clamping to be determined.
+  \item Fitting a constraint set within the AOS leads to operating regions that are completely feasible in both the input and output space.
+  \item Constraints that are linear combinations of variables can be applied to a system by adding a pseudo-variable to the process and imposing high/low constraint thereon.
+  \item The results obtained by the method are readily applicable to commercial MPCs.
+\end{itemize}
+
+From the process of fitting constraint sets, these additional conclusions can be made;
+\begin{itemize}
+\item The size of a constraint set can be reduced by fitting a smaller set within, whilst maximising the operating region of the fitted set.
+\item A more rigorous formulation is obtained when the optimisation problem is expressed in terms of facets rather than vertices, but this increases the solution complexity.
+\item The constrained problem formulation resulted in faster solution times when compared to the unconstrained case.
+\item The accuracy of fitting for arbitrary sets yielded the following results;
+  \begin{itemize}
+  \item 80\% of fitting results were within 10\% of the optimum solution for set fitting in 2 dimensions.
+  \item 1\% of fitting results were within 10\% of the optimum solution for set fitting in 3 dimensions.
+  This low accuracy is ascribed to ill conditioning of the problem and increased superfluous degrees of freedom.
+  \end{itemize}
+\end{itemize}
 
 \section{Recommended future research}
 The conclusions made and work presented in this dissertation opens a few avenues for further improvement and research.
@@ -19,11 +34,18 @@ The following would be attractive additions to the method;
 \begin{itemize}
   \item Support for more model types.
   \item A graphical user interface to bind all the routines into an easily accessible tool.
-  \item Data representation
+  \item An improved method of data representation for higher order systems, as graphical representation becomes difficult in more than 3 dimensions. 
 \end{itemize}
 \subsection{Constraint set fitting}
-\subsection{The Operability Index}
+The process of constraint set fitting should be improved upon to increase its accuracy for higher dimensional systems.
 
+Also, the incorporation of additional functions into the fitting procedure would improve the output of this process.
+Fitting done with respect to the volume integral of (for example) economic/sensitivity functions would highlight regions of economic/control concern.
+
+\subsection{The Operability Index}
+Whilst not strictly speaking part of this project, an extension of the Operability Index and its associated spaces are proposed.
+The inclusion of dynamics in the models should produce a transient space around the original AOS.
+The information obtained from this space could be valuable in determining optimal/realistic dynamic constraints for MPC packages, e.g. the funnels of RMPCT.
 
 % Local Variables:
 % TeX-master: "AHC_thesis"
