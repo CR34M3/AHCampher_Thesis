@@ -1,17 +1,56 @@
 \chapter{Systematic Constraint Handling}\label{chap:conhand}
 \begin{overview}
-  [Constraint handling overview...]
+  This chapter gives an overview of the proposed method of constraint handling based on the work of \citet{vinsonphd}.
+  General application of the OI for improved MPC operation is also reviewed.
 \end{overview}
 
-%%% OTHER SECTIONS - LAYOUT
-\section{Interactivity}
-\citet{vinsonphd} presents a list of issues that limit the performance of MPCs (with specific attention to DMCplus) and proposes methods (using the operability index) to solve these problems. 
-Most of these methods are directly applicable to the proposed constraint handling method of this document. 
-The issues identified by \citet{vinsonphd} as well as additions are shown in table~\ref{tab:mpcissues}.
+\section{Constraint checking}
+Commercial MPCs use only their set engineering limits to check the validity of constraints.
+Constraints in the input and output space are interconnected via the process model.
+Along with the engineering constraints (which represent the ultimate bounds) the model should be used to validate constraints. 
+\subsection{Feasibility}
+Operating regions, such as the DOS, is usually specified using external requirements on the inputs/outputs.
+The validity of such a space should be checked against the attainable regions of the corresponding inputs/outputs.
+In this respect, determining the Operability Index provides a good measure of how valid a specified operating region is.
+\subsection{Constraint changes}
+Changing constraints during process operation is a common procedure.
+The effects of constraint changes on their corresponding input/output spaces are, however, neglected in commercial MPCs.
+Checking the reduction/increase in size of available input space for a change in output constraints (or vice versa) should be done.
+Ideally a measure of clamping/relaxing of constraints should be supplied.
+\subsection{Setpoints}
+The same argument for feasible constraints apply to setpoints.
+The specification of setpoints should be checked to be within the attainable output space for a given available output space.
+
+\section{Constraint set fitting}
+As shown by \citet{vinsonphd} -- by means of the Operability Index -- a larger operating region is advantageous for control.
+Fitting a constraint set within the AOS/DOS intersection (whilst maximising its volume) will increase the OI and yield feasible constraints.
+\subsection{Set reduction}
+When considering the AOS/DOS intersection (and all the constraints specifying it), the control problem can be reduced by fitting a set with less constraints therein.
+A constraint set with less constraints than the original AOS/DOS intersection can be fitted and its volume (i.e. operating region) maximised. 
+\subsection{High/low limits}
+The most common method of specifying constraints for commercial MPCs is using high/low limits.
+Fitting the maximal volume set of high/low constraints within the AOS/DOS intersection increases the OI, yields constraints and an operating region that is completely feasible, and is directly applicable to commercial MPC packages.
+\subsection{Constraint types}
+The engineering constraints specified for processes are typically based on physical limits of process equipment.
+The specification of the engineering limits should ideally be a subset of the physical limits and the AOS of the process.
+One method would be to specify high/low limits on the outputs determined by their maximum values in the AOS.
+Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
+
+\section{Commercial MPC interfacing}
+\subsection{Linear constraints}
+For the case where constraints that are linear combinations of variable are present, they need to be reformatted to conform to the high/low limit structure used by commercial MPCs.
+Linear constraints should therefore be added as unmeasured variables to the process model, with gain constants as determined by the coefficients in the linear constraint.
+A high/low limit can now simply be applied to this newly added variable.
+
+\section{General application of the OI}
+\citet{vinsonphd} presents a list of additional issues that limit the performance of MPCs (with specific attention to DMCplus) and proposes methods (using the operability index) to solve these problems. 
+These methods are indirectly applicable to the proposed constraint handling method of this document and are presented here for that reason. 
+The issues identified by \citet{vinsonphd} are shown in table~\ref{tab:mpcissues}.
 \begin{landscape}
+\hfill
 \begin{table}[htbp]
   \caption[Methods for improving the working and understanding of MPCs]
-    {Methods for improving the working and understanding of MPCs}
+    {Methods for improving the working and understanding of MPCs \citep{vinsonphd}}
   \label{tab:mpcissues}
   \centering
   \begin{tabular}{p{8cm} p{8cm} p{8cm}}
@@ -24,11 +63,6 @@ Both of these have a stabilizing effect but result in a more sluggish controller
 These limits may also cause the controller to not reach optimum solutions.
 & Using the OI and the associated output spaces, the possible outputs of a (newly) limited input space is clearly shown.\\[1.3ex]
     
-Constraints on MV can cause CVs to not reach their maximum/minimum constraints. 
-These CV constraints usually correspond with economically optimal solutions. 
-& Increase/Adjust the MV limits. 
-& The spaces associated with the OI would make it clear to what extent MV limits can be adjusted and how they would affect the output space.\\[1.3ex]
-
 Disturbances can cause CVs to violate constraints. 
 In some cases, the controller might give up on a constraint and continue (now using a subset of the CVs).
 & Possible solutions include; model re-identification (in the case of an inconsistency), fixing the source of the disturbance or adding a DV to account for the disturbance.
@@ -43,6 +77,7 @@ How far a CV constraint can be moved (given the MV constraints) can also be dete
     \bottomrule
   \end{tabular}
 \end{table}
+\hfill
 \end{landscape}
 
 % Local Variables:
