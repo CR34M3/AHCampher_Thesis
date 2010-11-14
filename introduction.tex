@@ -1,12 +1,41 @@
 \chapter{Introduction}\label{chap:intro}
-
 \section{Background}
+Model predictive controllers (MPCs) use models to predict the future behaviour of a process.
+The ability of some MPC algorithms to impose constraints on the outputs or inputs of a system is their biggest selling point.
+
+Just as the process predicts the effect of the inputs on the outputs, the constraints imposed on the system are also interdependent (via the model).
+At present, commercial MPC packages do not validate constraints based on the process model.
+This gives rise to the following problems;
+\begin{itemize}
+  \item Specified constraints on an input/output may be infeasible due to their corresponding output/input requirements.
+  \item Setpoint specification may be infeasible as the process has a limited output space (due to the input constraints).
+\end{itemize}
+
+A systematic approach to constraint management would therefore be an attractive addition to any MPC package. 
+Such a method would help to avoid infeasible constraints and further the understanding of constraint interaction in MPCs.
 
 \section{Problem statement}
+The objective is therefore to develop a method to systematically manage constraints imposed on MPCs.
+Mathematical rigour and unambiguous language when specifying constraints were key design criteria.
 
 \section{Method}
+The method builds on the work by \citet{vinsonphd}, \citet{limaphd} and \citet{opconproc} in interpreting constraint interactions.
 
-\section{Scope}
+The routines for this project were developed using the Python programming language.
+They were tested for functionality on the models and operating conditions of laboratory rigs.
+
+\section{Scope and deliverables}
+For this project, linear steady-state models are considered.
+The constraints imposed on the systems are also assumed to be linear.
+With these assumptions made, the project can now focus exclusively on convex sets in the input and output space.
+
+It needs to be noted that this project does not attempt to reinvent or propose an alternative to the method of internal constraint handling of MPC algorithms.
+
+The deliverables of this project are;
+\begin{itemize}
+\item Routines to perform a systematic analysis of constraints based on the process model.
+\item Results indicating the use of the aforementioned routines on practical systems.
+\end{itemize}
 
 % Local Variables:
 % TeX-master: "AHC_thesis"

@@ -1,12 +1,15 @@
 \chapter{Background}\label{chap:background}
 \begin{overview}
   In this chapter, background information is presented on the commercial MPC software used. 
-  Information regarding the test problems and case studies investigated, are also presented here.
+  Information regarding the case studies investigated, are also presented here.
 \end{overview}
 
 \section{Commercial MPCs}
 The general concepts of MPCs have been discussed in section ~\ref{sec:mpclit}.
-This section gives a more detailed description of two popular commercial MPC packages.
+This section gives a more detailed overview of two popular commercial MPC packages.
+
+Appendix~\ref{app:screenshots} contains screenshots of the interfaces mentioned in the sections that follow.
+
 \subsection{Honeywell RMPCT}
 Honeywell's MPC controller, RMPCT, forms part of their advanced process control suite, Profit Suite.
 A brief overview of the controller and optimizer is given below. 
@@ -71,11 +74,11 @@ The definitions of the FPR and the decouple ratio are contained in \citet{honeyw
 \end{figure}
 
 \subsubsection{Interface}
-Profit Design Studio is used for model identification.
+Profit Design Studio (figure~\ref{fig:ssrmpctmodel}) is used for model identification.
 From this interface the process model can be extracted.
-All the constraints (as discussed in the preceding section) can be added using this interface, where after the controller is built for on-line use.
+All the constraints (as discussed in the preceding section) can be added using this interface, where after the controller is built for on-line use from the Runtime Studio interface (figure~\ref{fig:ssrmpctcontrolbuild}).
 
-The operator interface, Profit Suite Operator Station, allows for constraint changes during plant operation.
+The operator interface, Profit Suite Operator Station (figure~\ref{fig:ssrmpctoperator}), allows for constraint changes during plant operation.
 As far as feasibility of constraints are concerned, these constraints are only checked to be within the Engineering limits (an additional constraint present in this interface).
 A gain matrix (the steady-state model) can easily be obtained from this interface.
 
@@ -88,22 +91,49 @@ The overview presented in this section is taken from \citet{aspentech1} unless s
 \subsubsection{Models}
 Model identification is done with DMCplus Model or with SmartStep which enables model identification whilst still maintaining control of a plant.
 Models are stored as FIR models and conversion to and from other model types are not supported.
-Extracting a steady-state gain matrix is however possible.
+Extracting a steady-state gain matrix is however possible as the gains are displayed during the modelling phase.
 
 \subsubsection{Constraints}
 As with RMPCT, constraints on the CVs and MVs are specified as high/low limits.
-Equal concern errors (ECEs) are used to calculate the optimal move plan and emphasise the relative importance of CVs.
+In addition to the constraints, equal concern errors (ECEs) are used to calculate the optimal move plan and emphasise the relative importance of CVs.
+
+Three types of constraints are used;
+\begin{itemize}
+\item Validity limits which describe limits on measured variables and the values they can attain.
+These are the outermost limits.
+\item Engineering limits are the hard limits in which the process is operated and are not violated in a solution.
+The engineering limits lie within the validity limits.
+\item Operator limits are used for optimisation, with successful solutions keeping to these limits.
+These are the innermost limits, contained within the engineering limits.
+\end{itemize}
 
 For constraint handling, rank groups are used.
 Constraints are ranked and lower rank constraints are considered ``hard'' whereas higher ranking constraints are relaxed until steady-state feasibility is achieved.
-%% EXPAND
+Optimisation constraints are ranked at 1000 and constraints that are ignored are ranked at 9999.
+
+The constraint handling of integrating variables is done by utilising ramp rates.
+Constraints on the variable is generated using a factor of the time to steady-state and the upper and lower bound.
+This limits the rate of change of a variable.
+Figure~\ref{fig:dmcplusramprates} shows the constraints generated using ramp rates.
+Note that the 'inverted funnel' becomes sharper when a the full time to steady-state is used as opposed to a fraction thereof.
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=8cm]{graph/dmcplusramprate}
+  \caption[DMCPlus ramp rate dynamic constraints]{Ramp rates creating dynamic constraints on integrating variables.}
+  \label{fig:dmcplusramprates}
+\end{figure}
 
 \subsubsection{Interface}
-%% EXPAND
+The DMCPlus Model (figure~\ref{fig:ssdmcplusmodel}) interface is used to obtain models from data.
+Obtaining a gain matrix is possible from this interface.
+Additions to the model matrix is also done from this interface.
 
+The controller is built using the DMCPlus Build interface (figure~\ref{fig:ssdmcpluscontrolbuild}).
+Models obtained in the previous step is implemented and a configuration file for the controller generated.
 
-\section{Test problems}
-
+The Production Control Web Interface (figure~\ref{fig:ssdmcplusoperator}) is used by operators to interact with the process.
+This interface is used to actively change constraints on inputs and outputs.
 
 \section{Case studies}
 The following actual systems were investigated to test the method, proposed in chapter~\ref{chap:conhand}.
@@ -124,16 +154,16 @@ Figure~\ref{fig:flowphoto} shows the rig along with its process flow diagram.
 
 \subsubsection{Process model}
 The level and flow rig is modelled as a $2\times2$ system.
-The MVs are the opening fractions of the two valves ($x_1\text{ \& }x_2$), and the CVs are the flow ($F$) and the level ($L$).
+The MVs are the milliamp signals sent to the valves ($x_1\text{ \& }x_2$).
+These signals correspond to the opening fractions of the two valves.
+The CVs are the flow ($F$) and the level ($L$).
 The steady-state gain matrix of this process is shown in equation~\ref{eq:flowmodel}.
+Note that valve 1 is an air-to-close valve and valve 2 is an air-to-open valve, which explain the negative gain in element 1 of $G_{fl}$.
 \begin{equation}
   \label{eq:flowmodel}
-    G_{fl} = \bpm 1 & 0 \\
-                 1 & 1 \\ \epm
-        %GET SCALING VALUES FROM LIZETTE
-             %     L        F
-             % x1 -0.0241   0
-             % x2  0.0056  -0.1287
+                    %x1       x2
+    G_{fl} = \bpm -0.0476 & -0.0498 \\      %L
+                  0.0111 & -0.0604 \\ \epm %F
 \end{equation}
 \subsubsection{Operating conditions}
 The operating conditions for this rig is shown in table~\ref{tab:flowopcon}
@@ -144,16 +174,15 @@ The operating conditions for this rig is shown in table~\ref{tab:flowopcon}
     \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
     && Low & High & Low & High \\ 
     \midrule
-    Inputs &$x_1$ & 0 & 1 & 0 & 1 \\
-           &$x_2$ & 0 & 1 & 0 & 1 \\[1.3ex]
-    Outputs &$F~(\ell\text{/min})$  & 0 & 1 & 0 & 1 \\
-            &$L~(\text{cm})$  & 0 & 1 & 0 & 1 \\
+    Inputs &$x_1 (\text{mA})$ & 4 & 20 & 4 & 20 \\
+           &$x_2 (\text{mA})$ & 4 & 20 & 4 & 20 \\[1.3ex]
+    Outputs &$F~(\text{gpm})$ & 1.2 & 1.5 & 0 & 1.9 \\
+            &$L~(\text{cm})$  & 15 & 18 & 6 & 25 \\
     \bottomrule
   \end{tabular}
   \caption{Operating conditions of level and flow rig.}
   \label{tab:flowopcon}
 \end{table}
-%GET VALUES FROM LIZETTE
 
 \subsection{Laboratory distillation column}
 \subsubsection{System description}
@@ -171,12 +200,14 @@ Figure~\ref{fig:columnphoto} shows a photo of the column along with its process 
 
 \subsubsection{System model}
 The process model has been reduced to a $2\times2$ matrix.
-Reflux flowrate ($R$) and the setpoint of plate 10's temperature ($T_{10~sp}$) are the MVs, and the temperatures of plate 1 and 10 ($T_1\text{ \& }T_{10}$) are the CVs.
+Reflux flowrate ($R$) and the setpoint of plate 10's temperature ($T_{10~sp}$) are the MVs, and the temperatures of plate 1 and 8 ($T_1\text{ \& }T_{8}$) are the CVs.
+The input to the model for $R$ is a milliamp value sent to the valve.
 Figure~\ref{fig:columnmodel} shows a graphic representation of the column model and equation~\ref{eq:columnmodel} gives the values of the steady-state gain model.
 \begin{equation}
   \label{eq:columnmodel}
-  G_{col} = \bpm -0.17 & 0.22 \\
-            0    & 1    \\ \epm
+                 % R      T10sp
+  G_{col} = \bpm -0.0575 & 0.96 \\       % T1
+                -0.146  & 0.518 \\ \epm % T8
 \end{equation}
 \begin{figure}[htbp]
   \centering
@@ -185,7 +216,7 @@ Figure~\ref{fig:columnmodel} shows a graphic representation of the column model 
   \label{fig:columnmodel}
 \end{figure}
 
-%Elaborate on the PI controller used...
+The PI controller between $T_{10~sp}$ and $Q$ was added as a safety measure, should the advanced control layer fail.
 
 \subsubsection{Operating conditions}
 Table~\ref{tab:columnopcon} shows the operating conditions of the distillation column.
@@ -196,10 +227,10 @@ Table~\ref{tab:columnopcon} shows the operating conditions of the distillation c
     \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
     && Low & High & Low & High \\ 
     \midrule
-    Inputs &$R~(\ell\text{/min})$    & 0 & 0.5 & 0 & 6.67 \\
+    Inputs &$R~(\text{mA})$          & 11 & 15 & 4 & 20 \\
            &$T_{10~sp}~(\degrees{C})$ & 78 & 82 & 0 & 90 \\[1.3ex]
     Outputs &$T_1~(\degrees{C})$     & 66 & 68 & 15 & 68 \\
-            &$T_{10}~(\degrees{C})$  & 78 & 82 & 25 & 90 \\
+            &$T_{8}~(\degrees{C})$   & 78 & 82 & 25 & 90 \\
     \bottomrule
   \end{tabular}
   \caption{Operating conditions of distillation column.}

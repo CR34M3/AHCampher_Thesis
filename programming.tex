@@ -66,11 +66,22 @@ The \qhull algorithm is used to calculate the hypervolume of the constrain set.
 \subsubsection{Space conversion}
 The process model is used when converting from the input space to the output space (or vice versa).
 When using a steady-state model (real matrix of gains) this results in a matrix multiplication.
-Therefore, the output of this operation is a linear transformation of the vertices of the initial constraint set.  
+Therefore, the output of this operation is a linear transformation of the vertices of the initial constraint set.
+
+It needs to be noted that since the steady-state gain model of the system is used, changes in outputs are the result of the matrix multiplication.
+The output values around which the model was linearised are used to translate the output space to absolute values.  
 
 \subsubsection{Intersections}
 When the intersection of two constraint sets need to be calculated (as is the case with the AOS and the DOS), a method of superfluous constraints is used.
-The constraints of both sets are combined into a single set, the feasible region of this set represents the intersection of the two initial sets.
+
+In an attempt to avoid the problem of degeneracy (section~\ref{sec:hgeometry}) the constraints that define the intersection are preprocessed.
+Redundant constraints are removed/retained according to the following criteria;
+\begin{itemize}
+\item Co-planar (duplicate) constraints will appear in the final solution and are retained.
+\item If all the vertices (of both intersecting sets) satisfy a given constraint, and a duplicate thereof does not exist, then that constraint is degenerate and excluded from the solution.
+\item If only a subset of the vertices violate a given constraint, then no verdict can be made about its degeneracy.
+\end{itemize}
+The final retained constraints of both sets are combined into a single set, the feasible region of this set represents the intersection of the two initial sets.
 
 \subsubsection{Constraint reformatting}
 Adding an unmeasured variable to a system by adding rows to the process matrix is a common technique in industry.
@@ -115,6 +126,7 @@ Again, the shapes considered in this problem are of fixed dimensions (and aspect
 \subsection{Problem formulation}
 Each half-space -- or the facets of a shape -- represents a constraint.
 The constraint set can therefore be described by equation~\ref{eq:cset}, where $A$ is the half-plane slope matrix and $\vect{b}$ the offsets.
+Note that although $\vect{x}$ is used in equation~\ref{eq:cset}, substitution with $\vect{u}$ or $\vect{y}$ for input or output constraints can be done without any loss of generality.
 \begin{equation}
   \label{eq:cset}
   A\vect{x} \leq \vect{b}
@@ -138,6 +150,7 @@ Expressed as a minimization problem, the fitting of an arbitrary shape  becomes 
 \end{align}
 For the fitting of a rectangular constraint set (high/low limits), equation~\ref{eq:arbvolmin} reduces to equation~\ref{eq:recvolmin}.
 In this description $\vect{b}$ is the only input variable (of size $2n \times 1$) and $I$ is an $n\times n$ identity matrix.
+
 \begin{align}
   \label{eq:recvolmin}
     \min_{\vect{b}}~~&\text{-volume}_{P_i}\\
@@ -165,6 +178,7 @@ This formulation, although rigorous, suffers from some problems in the execution
 This arises from the fact that concept of being ``inside'' one another is not defined for two half-spaces (with the exception of parallel half-spaces).
 \item Superfluous degrees of freedom are present, as the complete $A$ matrix and $\vect{b}$ are solved for.
 There is effectively 1 false degree of freedom for each constraint of $P_i$.
+The rationale for still using this formulation is simple -- full control of the $A$ matrix allows for all orientations of hyperplanes to be expressed without the use of infinite slopes.
 \item Due to $A$ and $\vect{b}$ begin fully changeable, shape inversion can occur.
 This occurs when constraints move in such a way that an open set generated.
 Figure~\ref{fig:shapeinversion} illustrates this concept.

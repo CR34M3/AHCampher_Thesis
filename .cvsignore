@@ -1,0 +1,14 @@
+auto
+*.aux
+*.glo
+*.idx
+*.lof
+*.log
+*.lot
+*.out
+thesis.toc
+*.ilg
+*.ind
+*.bbl
+*.blg
+*.gls
