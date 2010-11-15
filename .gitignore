@@ -8,3 +8,5 @@
 *.lot
 *.out
 *.log
+*.ilg
+*.ind
