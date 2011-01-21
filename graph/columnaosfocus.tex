@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+  \begin{axis}[
+    width=13cm,
+    xlabel=$T_1$~($\degrees{C}$),
+    ylabel=$T_8$~($\degrees{C}$),
+    xmin=65.8,xmax=68.7,ymin=77.8,ymax=82.2,
+    xtick={66,66.5,...,68.5},
+    ytick={78,78.5,...,82},
+    legend style={
+      draw=none}]
+
+    %AOS
+    \addplot[color=blue,thick] coordinates {
+      (36.685,  60.873) 
+      (36.915,  61.457) 
+      (99.315,  95.127) 
+      (99.085,  94.543) 
+      (36.685,  60.873) 
+    };
+    %DOS
+    \addplot[color=black,thick,dashed] coordinates {
+      (68.,  82.)
+      (66.,  82.)
+      (66.,  78.)
+      (68.,  78.)
+      (68.,  82.)
+    };
+    \legend{AOS,DOS}
+  \end{axis}
+\end{tikzpicture}

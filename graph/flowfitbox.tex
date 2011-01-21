@@ -1,0 +1,36 @@
+\begin{tikzpicture}
+  \begin{axis}[
+    width=13cm,
+    xlabel=$F$~(gpm),
+    ylabel=$L$~(cm),
+    legend style={
+      cells={anchor=west},
+      draw=none}]
+
+    %fitted box
+    \addplot[color=green,line width=3pt] coordinates {
+      (1.50000041,  16.80748374)
+      (1.19999992,  16.80748374)
+      (1.19999992,  16.07003455)
+      (1.50000041,  16.07003455)
+      (1.50000041,  16.80748374)
+    };
+    %AOS
+    \addplot[color=blue,thick] coordinates {
+      (1.3396,  16.9768)
+      (2.1012,  16.7992)
+      (1.3044,  15.8328)
+      (0.5428,  16.0104)
+      (1.3396,  16.9768)
+    };
+    %DOS
+    \addplot[color=black,thick,dashed] coordinates {
+      (1.2,  18)
+      (1.2,  15)
+      (1.5,  15)
+      (1.5,  18)
+      (1.2,  18)
+    };
+    \legend{Fitted constraints,AOS,DOS}
+  \end{axis}
+\end{tikzpicture}

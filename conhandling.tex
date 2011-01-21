@@ -1,84 +1,229 @@
 \chapter{Systematic Constraint Handling}\label{chap:conhand}
 \begin{overview}
-  This chapter gives an overview of the proposed method of constraint handling based on the work of \citet{vinsonphd}.
-  General application of the OI for improved MPC operation is also reviewed.
+  This chapter presents the proposed method of constraint handling based on the work of \citet{vinsonphd}.
+  The method comprises:
+  \begin{itemize}
+    \item constraint checking for feasibility,
+    \item quantification of operability clamping after constraint changes,
+    \item the implementation of linear constraint in the commercial MPC structure, and
+    \item constraint set fitting for reduction of the control problem.
+  \end{itemize}
+  A section is also devoted to disambiguating the language used to refer to constraints based on their sources.
 \end{overview}
+
+\section{Assumptions}
+Certain assumptions are made about the systems investigated.
+This serves to define the scope of the project and aids in the mathematical rigour of the methods.
+\begin{itemize}
+\item Steady-state models are used.
+  These models result in real matrices and allow for strictly linear transformations of spaces.
+\item Only linear constraints are considered.
+  This allows for half-space geometry to be used and ensures convexity of intersections (along with the assumption of steady-state gain models).
+\item The convexity of all spaces are assumed.
+  This allows the use of minimum vertex descriptions.
+\end{itemize}
+Only a subset of the available model types are presented in this dissertation.
+It is by no means implied that rigorous mathematical methods are only possible for this given subset.
+
+Note that when reference is made to a ``constraint set'', all the half-spaces comprising that set as well as the feasible region (of the set) is implied.
 
 \section{Constraint checking}
 Commercial MPCs use only their set engineering limits to check the validity of constraints.
-Constraints in the input and output space are interconnected via the process model.
-Along with the engineering constraints (which represent the ultimate bounds) the model should be used to validate constraints. 
+Along with the engineering constraints (which represent the ultimate bounds) the model should also be used to validate constraints. 
+This is due to the constraints in the input and output space being interconnected via the process model.
+
 \subsection{Feasibility}
-Operating regions, such as the DOS, is usually specified using external requirements on the inputs/outputs.
-The validity of such a space should be checked against the attainable regions of the corresponding inputs/outputs.
+Operating regions, such as the DOS, is usually specified using external requirements on the inputs or outputs.
+The validity of such a space should be checked against the attainable regions of the corresponding inputs or outputs.
 In this respect, determining the Operability Index provides a good measure of how valid a specified operating region is.
+
 \subsection{Constraint changes}
-Changing constraints during process operation is a common procedure.
-The effects of constraint changes on their corresponding input/output spaces are, however, neglected in commercial MPCs.
-Checking the reduction/increase in size of available input space for a change in output constraints (or vice versa) should be done.
-Ideally a measure of clamping/relaxing of constraints should be supplied.
+It is typical of operators to change constraints during the operation of processes; usually tightening output or input constraints.
+The effects of constraint changes on their corresponding spaces are, however, neglected in commercial MPCs.
+The reduction or increase in size of the available input space for a change in output constraints (or vice versa) should be checked.
+Ideally a measure of clamping (or relaxing) of constraints should be supplied.
+
+It is intuitive that constraint tightening in the output space has a corresponding tightening effect in the input space, but to which extent isn't immediately clear.
+To quantify the tightening of the inputs, the OI of \citet{vinsonphd} can be used, although, this has the downside of remaining at a value of 1 when the DIS is already contained within the AIS, regardless of the size change of the DIS.
+Another possibility is a ratio of the hypervolumes of the original attainable part of the DIS and the attainable part of the new DIS ($DISn$).
+This clamping factor ($C$) is shown in equation~\ref{eq:inputclamp}.
+\begin{equation}
+  \label{eq:inputclamp}
+  C = 1-\frac{\mu(AIS \cap DISn)}{\mu(AIS \cap DIS)}
+\end{equation}
+where $\mu$ is a function to calculate the hypervolume of a space.
+
 \subsection{Setpoints}
 The same argument for feasible constraints apply to setpoints.
 The specification of setpoints should be checked to be within the attainable output space for a given available output space.
 
+\section{Commercial MPC interfacing}
+As discussed in section~\ref{sec:commercialmpc}, most commercial MPC packages only allow for high and low limits to be imposed on variables.
+
+\subsection{Linear constraints}\label{sec:lincons}
+For the case where constraints that are linear combinations of variables are present (e.g. $\beta_1 y_1+\beta_2 y_2\leq b_1$), they need to be reformatted to conform to the limited structure provided by commercial MPCs.
+Adding an unmeasured variable to a system by adding rows to the process matrix is a common technique used with commercial MPCs.
+This same technique can be used to impose linear constraints  on outputs or inputs.
+The unmeasured variables added to the process model will have gain constants as determined by the coefficients in the linear constraint.
+
+Considering a model $G$ for an $n\times m$ system ($n$ inputs, $m$ outputs) and the linear constraints 
+\begin{align}
+  \alpha \vect{u} &\leq b_u\notag\\ 
+  \beta \vect{y} &\leq b_y \notag   
+\end{align}
+where $\alpha$ and $\beta$ are rows of $A_u$ and $A_y$ (equation~\ref{eq:gencons}) respectively, the following applies:
+\begin{itemize}
+\item For an input constraint a row is added to the process model and the new input, $u_{n+1}$ is defined thus:
+\begin{equation}
+  \label{eq:linconinput}
+   u_{n+1} = \alpha
+\end{equation}
+Even though $u_{n+1}$ represents an input constraint, it is strictly speaking an additional output and the number of inputs to the system model remains unchanged. 
+\item For an output constraint a row is added to the process model and the new output, $y_{m+1}$ is defined thus:
+\begin{equation}
+  \label{eq:linconoutput}
+   y_{m+1} = (G'\times\vect{1}_{m\times 1})'\cdot\beta
+\end{equation}
+where $\vect{1}_{m\times 1}$ is a column vector of 1's of length $m$.
+\end{itemize}
+A high or low limit can now simply be applied to this newly added variable.
+For the examples above, this is simply $u_{n+1}\leq b_u$ and $y_{m+1}\leq b_y$
+
+
 \section{Constraint set fitting}
 As shown by \citet{vinsonphd} -- by means of the Operability Index -- a larger operating region is advantageous for control.
-Fitting a constraint set within the AOS/DOS intersection (whilst maximising its volume) will increase the OI and yield feasible constraints.
+The largest operating region (when considering the output space) is represented by the AOS and DOS intersection.
+Ideally all the constraints specifying that intersection (the facets of the intersection) could be implemented in an MPC which would result in the maximum operating range for the controller.
+
+Firstly, as the dimensions of the system increase the dimensions of the polytopes describing the input and output spaces increase as well.
+This results in a high number of facets present in the intersections of spaces.
+Furthermore, as the irregularity of the spaces increase the number of facets present in the intersections will also increase.
+Each of these facets represent a constraint that can be added to the controller.
+
+To add to this, the structure available for constraints in commercial MPCs require linear constraints to be expressed as unmeasured variables with high and low limits.
+As mentioned in the preceding section, each linear constraint will add an additional variable along with its constraints to the system.
+
+Therefore, although ideal, implementing the full description of a highly faceted AOS and DOS intersection will greatly increase the control problem.
+This will have an adverse effect on the computational time of the controller.
+The description of the controller will also suffer, as a large number of unmeasured variables (for the purpose of imposing constraints) can make housekeeping difficult.
+
+The fitting of a constraint set (with fewer constraints) within the AOS and DOS intersection can be used to reduce the control problem.
+The operating region of the smaller (fitted) constraint set will inevitably be less than that of the full intersection.
+The fitting procedure therefore becomes a compromise between control problem size and the available operating region for the controller.
+
+The sections that follow formally define the fitting problem and gives attention to the some important classes of set fitting and reduction.
+Although the output space (AOS and DOS intersection) is used for examples and explanations the same applies to the input space.
+
+\subsection{Problem formulation}
+In mathematical terms, the problem consists of fitting the largest volume polytope (with a specified number of facets) within another polytope (with more facets than the fitted polytope).
+Each half-space -- or the facets of a shape -- represents a constraint.
+The constraint set can therefore be described by equation~\ref{eq:cset}, where $A$ is the half-plane slope matrix and $\vect{b}$ the offsets.
+Although $\vect{x}$ is used in equation~\ref{eq:cset}, substitution with $\vect{u}$ or $\vect{y}$ for input or output constraints can be done without any loss of generality.
+\begin{equation}
+  \label{eq:cset}
+  A\vect{x} \leq \vect{b}
+\end{equation}
+In $n$ dimensions, the general problem now becomes: 
+\begin{itemize}
+  \item given a polytope, $P_o$, having $l$ facets,
+  \item fit a polytope, $P_i$, with $k$ facets (where $n+1 \leq k \le l$) within $P_o$, and
+  \item maximise the volume of $P_i$.
+\end{itemize} 
+With the specification of the number of facets, the dimensions of $A$ and $\vect{b}$ for both $P_i$ and $P_o$ are fixed.
+For $P_o$, $A$ is an $l \times n$ matrix and $\vect{b}$ is a $l \times 1$ vector.
+For $P_i$, $A$ is an $k \times n$ matrix and $\vect{b}$ is a $k \times 1$ vector.
+
+Expressed as a minimization problem, the fitting of an arbitrary shape  becomes equation~\ref{eq:arbvolmin}.
+\begin{align}
+  \label{eq:arbvolmin}
+    \min_{A,~\vect{b}}~~&\text{-volume}_{P_i}\\
+    \text{s.t.}~~~~ &P_i \subset P_o \notag \\
+                    &P_i \text{~and~} P_o \text{~convex} \notag
+\end{align}
+This seemingly trivial optimisation problem is not covered in this form in available literature.
+A similar problem is that of optimised diamond cutting \citep{diamondcut} which maximises the volume of a diamond within a rough stone.
+This method allows for rotation, translation and scaling, but uses a fixed shape for the diamond (i.e. all aspect ratios of the fitted shape stays constant).
+Another well considered problem in literature is the packing problem, which involves packing the maximum amount of shapes in a given shape (or container).
+Again, the shapes considered in this problem are of fixed dimensions (and aspect ratios), but the largest dissimilarity is that a number of shapes are fitted, not just a single one.
+
 \subsection{Set reduction}
-When considering the AOS/DOS intersection (and all the constraints specifying it), the control problem can be reduced by fitting a set with less constraints therein.
-A constraint set with less constraints than the original AOS/DOS intersection can be fitted and its volume (i.e. operating region) maximised. 
-\subsection{High/low limits}
-The most common method of specifying constraints for commercial MPCs is using high/low limits.
-Fitting the maximal volume set of high/low constraints within the AOS/DOS intersection increases the OI, yields constraints and an operating region that is completely feasible, and is directly applicable to commercial MPC packages.
-\subsection{Constraint types}
-The engineering constraints specified for processes are typically based on physical limits of process equipment.
-The specification of the engineering limits should ideally be a subset of the physical limits and the AOS of the process.
-One method would be to specify high/low limits on the outputs determined by their maximum values in the AOS.
-Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
+Implementing all the constraints of the full AOS and DOS intersection does not require any fitting to be done.
+The linear constraints only need to be converted to the high and low limit structure (section~\ref{sec:lincons}).
 
-\section{Commercial MPC interfacing}
-\subsection{Linear constraints}
-For the case where constraints that are linear combinations of variable are present, they need to be reformatted to conform to the high/low limit structure used by commercial MPCs.
-Linear constraints should therefore be added as unmeasured variables to the process model, with gain constants as determined by the coefficients in the linear constraint.
-A high/low limit can now simply be applied to this newly added variable.
+The fitting of constraint sets will decrease the operational space of the controller, but also decrease the size of the control problem.
+The extent to which the control problem will be decreased depends on the number of constraints fitted and the type of fit.
 
-\section{General application of the OI}
-\citet{vinsonphd} presents a list of additional issues that limit the performance of MPCs (with specific attention to DMCplus) and proposes methods (using the operability index) to solve these problems. 
-These methods are indirectly applicable to the proposed constraint handling method of this document and are presented here for that reason. 
-The issues identified by \citet{vinsonphd} are shown in table~\ref{tab:mpcissues}.
-\begin{landscape}
-\hfill
-\begin{table}[htbp]
-  \caption[Methods for improving the working and understanding of MPCs]
-    {Methods for improving the working and understanding of MPCs \citep{vinsonphd}}
-  \label{tab:mpcissues}
-  \centering
-  \begin{tabular}{p{8cm} p{8cm} p{8cm}}
-    \toprule
-    Issues hampering MPC potential & Current solution & Proposed solution \\
-    \midrule
-Processes with considerable noise cause targets to move with each controller execution.
-& Limit MV stepsize or filter CVs. 
-Both of these have a stabilizing effect but result in a more sluggish controller. 
-These limits may also cause the controller to not reach optimum solutions.
-& Using the OI and the associated output spaces, the possible outputs of a (newly) limited input space is clearly shown.\\[1.3ex]
-    
-Disturbances can cause CVs to violate constraints. 
-In some cases, the controller might give up on a constraint and continue (now using a subset of the CVs).
-& Possible solutions include; model re-identification (in the case of an inconsistency), fixing the source of the disturbance or adding a DV to account for the disturbance.
-& Due to the fixed constraints on MVs and CVs the resulting AIS and DOS can be used to calculate the controller's ability to reject a disturbance. 
-A measure of controller robustness can be derived from this.\\[1.3ex]
-    
-Move Suppression factors for MVs and Equal Concern Errors (give-ups) for CVs are used to tune MPCs for dynamic performance.
-& The choice of these factors are usually qualitative and according to guidelines (and validated via offline simulations).
-& The OI (and its associated spaces) can provide guidance in determining move suppression factors and give-ups. 
-The difficulty in controlling a CV at a given constraint can be derived from the OI. 
-How far a CV constraint can be moved (given the MV constraints) can also be determined from the OI.\\
-    \bottomrule
-  \end{tabular}
-\end{table}
-\hfill
-\end{landscape}
+\subsubsection{Intermediate fits}
+As per equation~\ref{eq:arbvolmin}, a progressively lower amount of constraints can be fitted within the intersection as arbitrary shapes.
+The closer the number of constraints in fitted shape is to that of the original intersection, the larger the operational space of the controller will be.
+
+To reduce the number of additional variables that need to be added to implement linear constraints, special types of fits can be used.
+From equations~\ref{eq:linconinput} and \ref{eq:linconoutput} it is clear that the gains of variables added to the process model is only dependent on the half-space slope and the process model.
+Therefore, parallel constraints only require one variable to be added to the process model.
+
+Sets of parallel constraints can therefore be fitted, which will require one additional variable to be added to the process model per pair.
+As the slopes of the parallel constraints are not fixed (for the minimisation problem) this will be referred to as free parallel fitting.
+Enforcing these parallel constraints on the minimisation problem will result in a lower operational space for the controller when compared to an arbitrary shape with the same amount of constraints.
+
+The fitting of free parallel sets is presented as an option here, but not covered in this project.
+
+\subsubsection{High and low limits}
+The most common method of specifying constraints for commercial MPCs is using high and low limits.
+Fitting the maximal volume set of high and low constraints within an intersection is a subset of free parallel fitting and has the following advantages: fitting results are directly applicable to commercial MPC packages, and no additional variables need to be defined.
+
+The disadvantage of this method is a further decrease in the operational space of the controller when compared to free parallel fitting.
+
+For the fitting of a rectangular constraint set (high and low limits), equation~\ref{eq:arbvolmin} reduces to equation~\ref{eq:recvolmin}.
+In this description $\vect{b}$ is the only input variable (of size $2n \times 1$) and $I$ is an $n\times n$ identity matrix.
+\begin{align}
+  \label{eq:recvolmin}
+    \min_{\vect{b}}~~&\text{-volume}_{P_i}\\
+    \text{s.t.}~~~~ &A = \bpm I \\ -I \epm \notag \\
+                    &P_i \subset P_o \notag \\
+                    &P_i \text{~and~} P_o \text{~convex} \notag
+\end{align}
+where $n$ is the number of dimensions (variables) present in the initial set.
+
+\subsubsection{Minimal fit}
+The lowest number of constraints that can be fitted into a set is $n+1$, where $n$ is the number of dimensions (variables) of the initial set.
+This is due to the condition that the resulting set needs to be fully bounded.
+
+\subsection{Fitting implementation}
+The implementation of the fitting procedure is discussed in the code manual and program listing accompanying this document.
+Therein, attention is also given to different problem formulations and the advantages and disadvantages thereof.
+
+\section{Constraint types}
+When constraints are considered, and specifically changes to them, the types of constraint present are important.
+This is due to the direction of change allowed by each constraint type.
+The following set of constraint types are proposed to disambiguate the specification of constraints.
+These proposed types are based on the sources of constraints.
+\begin{itemize}
+  \item {\bf Physical constraints} represent the physical limits of the system.
+  Examples are tank levels, valve saturation limits and maximum heat duties.
+  Allowed changes to these constraints are usually one-sided or to the inside of a range.
+  \item {\bf Quality constraints} are concerned with product quality, these constraints are typically determined by external requirements or standards.
+  Strictly speaking, changes to these constraints are allowed in any direction.
+  However, due to the economic (e.g. product purity) and safety (e.g. emission limits) consequences of changes, these limits are only changed by those with granted access.
+  \item {\bf Operational constraints} are the innermost constraint set used by the MPC controller.
+  These constraints are typically changed using the operator interfaces (e.g. figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) and are contained within their respective variables' physical and quality constraints.
+  \item {\bf Optimisation constraints} are those constraints that are not critical for the control of the plant, but rather the performance and efficiency of the plant as determined by external cost functions.
+  Typically these external cost functions will represent a type of saving, e.g. energy savings or product give-away reduction.
+\end{itemize}
+
+The specification of spaces, in particular the AIS and the DOS, usually consists of a combination of the constraint types mentioned above.
+Classifying constraints in this unambiguous manner will further the understanding of a system and help identify which constraints can be modified to change the size or shape of a space.
+
+Commercial MPCs do not typically distinguish between different types of constraints.
+The constraint types present in RMPCT (section~\ref{sec:rmpctcons}) and DMCplus (section~\ref{sec:dmcpluscons}) are listed below and their connection to the proposed constraint types discussed.
+\begin{itemize}
+  \item {\bf Engineering limits} are typically based on a combination of physical constraints and quality constraints.
+  The specification of the engineering limits should ideally be a subset of the physical constraints and the AOS and AIS of the process.
+  One method would be to specify high and low limits on the outputs determined by their maximum values in the AOS.
+  Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
+  \item {\bf Validity limits} (DMCplus) are equal to or outside of the physical constraints of a variable.
+\end{itemize}
+
+
 
 % Local Variables:
 % TeX-master: "AHC_thesis"

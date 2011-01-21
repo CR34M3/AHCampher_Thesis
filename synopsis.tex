@@ -4,16 +4,14 @@ Certain MPC algorithms allow constraints  to be imposed on the inputs or outputs
 Consistent constraint handling methods -- which account for their interdependence and disambiguate the language used to specify constraints -- would therefore be an attractive addition to any MPC package.
 
 A rigorous and systematic approach to constraint management has been developed, building on the work of \citet{vinsonphd}, \citet{limaphd} and \citet{opconproc} in interpreting constraint interactions. 
-The method supports linear steady-state system models, and provides routines to obtain the following information;
+The method supports linear steady-state system models, and provides routines to obtain the following information:
 \begin{itemize}
-  \item effects of constraint changes on the corresponding input/output constraints,
+  \item effects of constraint changes on the corresponding input and output constraints,
   \item feasibility checks for constraints,
-  \item constraint-type information,
   \item specification of constraint-set size and
-  \item optimal fitting of constraints within the desirable input/output space.
+  \item optimal fitting of constraints within the desirable input and output space.
 \end{itemize}
 Mathematical rigour and unambiguous language for identifying constraint types were key design criteria. 
-Ample feedback to the user was added to provide a supportive rather than prescriptive environment.
 
 The outputs of the program are compatible with commercial MPC packages, such as Honeywell's RMPCT$^{\copyright}$ and AspenTech's DMCPlus$^{\copyright}$.
 These packages were used in conjunction with the developed software to test functionality and performance of the method.

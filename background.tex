@@ -1,25 +1,246 @@
-\chapter{Background}\label{chap:background}
+\chapter{Model Predictive Control}\label{chap:background}
 \begin{overview}
-  In this chapter, background information is presented on the commercial MPC software used. 
-  Information regarding the case studies investigated, are also presented here.
+  With the application of the OI to MPCs shown in the previous chapter, this chapter gives an overview of MPCs in general.
+Attention is given to:
+\begin{itemize}
+  \item general MPC theory,
+  \item types of process models used and
+  \item how constraints are implemented in MPCs.
+\end{itemize}
+Finally, background information is presented on two popular commercial MPC packages.
 \end{overview}
 
-\section{Commercial MPCs}\label{sec:commercialmpc}
-The general concepts of MPCs have been discussed in section ~\ref{sec:mpclit}.
-This section gives a more detailed overview of two popular commercial MPC packages.
+\section{Model Predictive Control}\label{sec:mpclit}
+Since its successful implementation in the petrochemical industry, model predictive control (MPC) has gained widespread acceptance in the processing sector \citep[1]{maciejowskimpc}. 
+This has led to the development of many commercial MPC packages such as DMCplus (Aspentech), RMPCT (Honeywell), Connoisseur (Invensys) and SMOC (Shell Global Solutions) \citep{qinbadgwell}.
+\subsection{Nomenclature and notation}
+For the sake of coherence between sources a set nomenclature and notation scheme will be used. 
+The following variables are defined; $x$ refers to the state of the system, $y$ to the outputs and $u$ to the inputs.
+Where vectors are concerned (the MIMO case), a bold face character is used, e.g. $\vect{x}$ for $x$.
+Matrices are distinguished by the use of capitals.
 
+The transpose of a matrix or a vector is indicated by a dash ($'$), e.g. $\vect{x}'$.
+
+For discrete time forms, $k$ is used to denote the sample number.
+For simplicity of notation, indices are used to refer to samples, i.e. $x_{k+1}$ instead of $x(k+1)$.
+\subsection{Control theory}
+Model predictive control differs from other model based control techniques (such  as Inverse Nyquist Array- and Internal Model Control) in its active use of predictions for future process outcomes \citep[137]{maciejowskifb}. 
+In this context, MPC further distinguishes itself from other predictive control techniques in its ability to accommodate constraints on inputs and outputs.
+
+\citet[8]{maciejowskimpc} summarises the control scheme of MPC in four steps; Measure, Predict, Optimise and Apply. 
+These steps are summarized below:
+\begin{enumerate}
+  \item Describe (Measure); the current outputs ($y(t)$) are measured and the error (deviation from the setpoint trajectory, $s(t)$) is calculated.
+  \item Predict; using the model, future outputs ($\hat{y}_k$) are calculated (over the prediction horizon, $H_v$).
+  \item Optimise (Calculate); control moves (over the control horizon, $H_u$) are now calculated to minimize the predicted deviation from the setpoint trajectory.
+  \item Apply; only the first control move is implemented, where-after this procedure is restarted.
+\end{enumerate}
+
+Figure~\ref{fig:mpc:general} illustrates the aforementioned steps along with some other responses.
+The reference trajectory, $r_k$, shows the ideal response a variable should follow to reach the setpoint trajectory, $s(t)$.
+The free response, $\hat{y}_{k~f}$, shows the predicted values of the output if no change to the current control signal is made.
+
+\begin{figure}[htbp]
+  \centering
+%  \includegraphics[width=\fullwidth]{graph/mpc_general}
+  \scalebox{1}{\input{graph/mpc_general}}  
+  \caption[General MPC working]{General MPC working, showing predictions on both outputs and inputs \citep[8]{maciejowskimpc}}
+  \label{fig:mpc:general}
+\end{figure}
+
+\subsection{Objective functions}
+Optimal control moves are defined in terms of objective functions.
+These functions are often referred to as cost functions \citep[41]{maciejowskimpc} as they can incorporate input and output weighting based on economic factors.
+
+The general formulation of the unconstrained objective function is presented in equation~\ref{eq:genobjfn}. 
+Modifications to this function (due to constraints) is discussed in section~\ref{sec:conobjfn}. 
+From \citet[17]{rawlings} and \citet[41]{maciejowskimpc}, the objective function which penalizes deviations from the setpoint trajectory as well as moves in the inputs is shown below;
+% TODO - eqn in terms of zero setpoint, generalize to non-zero sp
+\begin{equation}
+  \label{eq:genobjfn}
+  V(\vect{x}_0,\vect{u})=\frac{1}{2}\sum^{N-1}_{k=0}[\vect{x}_k'Q\vect{x}_k + \vect{u}_k'R\vect{u}_k]
+  + \frac{1}{2}\vect{x}_N'P_f\vect{x}_N
+\end{equation}
+It is clear that the objective function depends on both the state sequence and the input sequence. 
+The current state, $\vect{x}_0$ is known (measured) and the subsequent states are determined by the model and the input sequence. 
+The optimal MPC control problem therefore becomes;
+\begin{equation}
+  \label{eq:opctrlprob}
+  \min_{\vect{u}} V(\vect{x}_0,{\bf u})
+\end{equation}
+
+\subsection{Models}
+The correct choice of model is one of the most important steps in the operation of MPCs \citep[17]{rossiter}.
+This is due to the active use of the model in making predictions as the controller runs, and not serving merely as an analysis aid \citep[37]{maciejowskimpc}.
+
+\subsubsection{State space models}
+State space models are the most encountered type in literature.
+The general, linear, time-variant, state space model is presented in equation~\ref{eq:genss}.
+\begin{align}
+  \label{eq:genss}
+  \ddfrac{\vect{x}}{t} &= A(t)\vect{x} + B(t)\vect{u} \notag \\
+  \vect{y} &= C(t)\vect{x} + D(t)\vect{u} \\
+  \vect{x}(0) &= \vect{x}_0 \notag
+\end{align}
+Where $A(t),~B(t),~C(t)$ and $D(t)$ are appropriately sized matrices of the state space model, and $\vect{x}_0$ is the initial state of the system.
+For the time-invariant case, these matrices simply reduce to $A,~B,~C$ and $D$. 
+As MPC is mostly implemented at discrete time steps, the model in equation~\ref{eq:genss} (for the time-invariant case) translates to equation~\ref{eq:genssdisc}.
+\begin{align}
+  \label{eq:genssdisc}
+  \vect{x}_{k+1} &= A\vect{x}_k + B\vect{u}_k \notag \\
+  \vect{y}_k &= C\vect{x}_k + D\vect{u}_k \\
+  \vect{x}_0 &~ \text{(given)} \notag
+\end{align}
+
+\subsubsection{Step and pulse response models}
+Step and pulse response models, especially finite impulse response (FIR) models, were widely used in the original descriptions of MPC.
+There has, however, been a recent trend to move to other model types, such as transfer function models \citepp{113}{maciejowskimpc}{26}{rossiter}.
+
+The pulse response model can be defined using the common convolution model \citep[284]{luyben}, as shown in equation~\ref{eq:fir}.
+Where $H$ is a matrix representing the response of an output to a unit pulse in the corresponding input.
+\begin{equation}
+  \label{eq:fir}
+  \vect{y}(t) = \sum^t_{k=0}H(t-k)\vect{u}_k
+\end{equation} 
+Even though FIR models are intuitive they are not without shortcomings.
+The most prominent of these problems are that FIR models are only applicable to asymptotically stable plants, and they are only adequate if the CVs are measured outputs.
+\citet[109]{maciejowskimpc} elaborates on this topic.
+
+\subsubsection{Transfer function models}
+In the Laplace domain, the input to output relationship of a generic process (as shown in figure~\ref{fig:genmodel}) is represented by;
+\begin{equation*}
+  \vect{\bar y}(s)=G(s)\vect{\bar u}(s)
+\end{equation*}
+where $G$ is the process matrix, and $\vect{\bar u}$ and $\vect{\bar y}$ are the process inputs and outputs (in deviation variables) respectively.
+The process matrix ($G$) can contain dynamic elements or, in the case of a steady-state model, only gains.
+Note that state ($\vect{x}$) information does not appear in the transfer function formulation.
+\begin{figure}[htbp]
+  \centering
+%  \includegraphics[width=8cm]{graph/model_genprocess}
+  \scalebox{1}{\input{graph/model_genprocess}}
+  \caption[Generic input to output model]{Generic process showing inputs ($\vect{\bar y}$), model ($G$) and outputs ($\vect{\bar x}$).}
+  \label{fig:genmodel}
+\end{figure}
+
+With the assumption of an initial zero state ($\vect{x}_0=0$), the state space description can be converted to a transfer function description.
+Taking the Laplace transform of equation~\ref{eq:genss} (for the time-invariant case), and rearranging, results in equation~\ref{eq:gentf}.
+\begin{align}
+  \label{eq:gentf}
+    \vect{\bar x}(s) &= (sI-A)^{-1}B\vect{\bar u}(s) \\
+    \vect{\bar y}(s) &= (C(sI-A)^{-1}B+D)\vect{\bar u}(s) \notag
+\end{align} 
+\subsubsection{Other model types}
+Some other model types are also used in MPCs, most are however derived from or reformulations of the above mentioned types.
+Examples include, distributed models \citep[4]{rawlings}, CARIMA models and matrix fraction descriptions \citep[24,28]{rossiter} -- with the later two stemming from transfer function descriptions.
+
+Even though only linear models have been presented in this section, many MPCs are capable of using non-linear models.
+The use of linear models in MPC is, however, common practice.
+Important reasons for this are; no assurance of convergence of solutions and optimisation being non-trivial for non-linear models \citep[17]{rossiter}.
+
+\subsection{Tuning}
+The tuning of MPCs is a complex task with many adjustable parameters, even in basic formulations.
+Most tuning is, however, based on experience or rules of thumb \citep[188]{maciejowskimpc}.
+
+As far as the objective function (equation~\ref{eq:genobjfn}) is concerned, the most prominent tuning parameters for MPCs are the weighting matrices $Q$, $R$ and $P_f$. 
+These are used to enforce the relative importance of deviations in both the inputs and outputs.
+
+The weighting matrices are by no means the only tuning parameters.
+Additional parameters include the horizons used for predictions, the reference trajectory and the auxiliary models used (e.g. disturbance models). 
+Chapter 7 of \citet{maciejowskimpc} covers the tuning of MPCs in some detail.
+
+\section{Constraints in MPC}
+The implementation of constraints is probably the most important selling point of MPCs.
+When used in conjunction with a steady-state optimiser, MPCs are able to operate with more CVs than MVs \citep{vinsonphd}. 
+When this is the case, additional degrees of freedom are obtained by controlling CVs within ranges rather than on setpoints.
+
+\subsection{Constraint types}
+Different types of constraints are present in the MPC algorithm.
+The following section lists these constraints and give a short description of their function and properties.
+\subsubsection{Control constraints}
+Often called ``hard'' constraints, these constraints are used for control (as opposed to optimisation) and are never violated when control moves are calculated.
+Control constraints exist for both outputs and inputs, and typically sort into two categories:
+\begin{itemize}
+  \item The constraints on inputs are typically physical constraints.
+    Examples are valve saturation limits and maximum heat duties.
+    Control constraints on outputs are usually concerned with safety and damage to equipment.
+    Tank levels are an example hereof.
+  \item Another class of control constraints (usually on outputs) are concerned with product quality and are thus operational in nature.
+\end{itemize}
+To add robustness to the control solution, some commercial MPCs use constraints that regulate dynamic behaviour.
+These are typically a changing constraint at each solution interval.
+Examples of these so called ``funnels'' are given in section~\ref{sec:rmpctcons}.
+
+\subsubsection{Optimisation constraints}
+The constraints implemented by the optimisers in MPC are often called ``soft'' constraints.
+These constraints are typically determined by operational and economical factors.
+These constraints are usually implemented as steady-state constraints which represent the optimal solutions of an external cost function.
+The limits of these constraints are contained within the control constraints mentioned above.
+
+As these constraints are not determined by the control objective function, situations exist where they are violated in an attempt to ensure feasibility of the MPC solution.
+This is discussed further in section~\ref{sec:coneffsol}.
+ 
+\subsection{Constraint formulation}
+Constraints on the inputs, outputs or states of a system can be represented as sets of linear inequalities.
+For the most general case, they can be expressed as follows:
+\begin{align}
+  \label{eq:gencons}
+  A_u\vect{u}_k &\leq \vect{b}_u \notag \\
+  A_y\vect{y}_k &\leq \vect{b}_y \\
+  A_x\vect{x}_k &\leq \vect{b}_x \notag
+\end{align}
+where $A_u,~A_y$ and $A_x$ are coefficient matrices, and $\vect{b}_u,~\vect{b}_y$ and $\vect{b}_x$ the half-space offsets.
+For the case where only upper and lower bounds on variables exist, $A_u$ and $\vect{b}_u$ reduce to:
+\begin{align*}
+  A_u={I\brack -I} \qquad \vect{b}_u={\vect{u}^{max}_k \brack -\vect{u}^{min}_k}
+\end{align*}
+where $\vect{u}^{max}_k$ and $\vect{u}^{min}_k$ correspond to the upper and lower limits of $\vect{u}_k$ respectively \citep[6]{rawlings}. 
+The coefficient matrices and offsets are reduced similarly for the outputs and the states.
+
+For constraints on rate of change of inputs, the formulation is similar to equation~\ref{eq:gencons}.
+The change in $\vect{u}_k$ during a sampling instance is now considered thus:
+\begin{align*}
+  A_{\Delta u}\Delta \vect{u}_k &\leq \vect{b}_{\Delta u} \notag \\
+  \text{with}~~ \Delta \vect{u}_k &= \vect{u}_{k+1}-\vect{u}_k
+\end{align*}
+
+\subsection{Quadratic objective functions}\label{sec:conobjfn}
+When constraints are present, the general objective function (equation~\ref{eq:genobjfn}), now subject to equation~\ref{eq:gencons} can be reformulated as a quadratic programming (QP) problem.
+This makes the problem convex and has favourable consequences for the solution of the optimisation.
+
+The mathematical description of the QP problem is omitted from this dissertation.
+\citet[81-83]{maciejowskimpc} as well as \citet[489-490]{rawlings} can be consulted for the complete reformulation.
+
+\subsection{Effect on solutions}\label{sec:coneffsol}
+The reformulation of the objective function and constraints into a QP problem -- and the subsequent convexity of the optimisation -- affects the solution in numerous ways.
+\citet[83]{maciejowskimpc} lists some of the solution properties obtained; namely that the termination of the QP problem is guaranteed and that computation time can be calculated.
+
+Constrained optimisation does however suffer from the problem of possible infeasibilities. 
+For commercial MPCs the solvers are usually custom built to provide a ``back-up'' solution in the case of infeasibilities.
+This back-up solution usually consists of modifying constraints (hence the term ``constraint handling'').
+The most common methods of internal constraint handling are listed below:
+\begin{itemize}
+\item Constraint softening, where constraints are prioritized and then relaxed (or removed) until feasibility is obtained \citep[160]{rossiter}.
+\item Using constraint windows which define a horizon over which constraints are enforced.
+Feasibility can now be obtained by changing the start and end-time of this window \citep[281-282]{maciejowskimpc}.
+\item Back- offs and borders can be defined, effectively changing all constraints into ``soft'' constraints.
+Due to the conservative approach, setting the back -off amounts therefore becomes a feasibility assurance and performance compromise \citepp{161}{rossiter}{282}{maciejowskimpc}.
+\end{itemize}
+
+
+\section{Commercial MPCs}\label{sec:commercialmpc}
+This section gives a more detailed overview of two popular commercial MPC packages.
 Appendix~\ref{app:screenshots} contains screenshots of the interfaces mentioned in the sections that follow.
 
 \subsection{Honeywell RMPCT}
-Honeywell's MPC controller, RMPCT, forms part of their advanced process control suite, Profit Suite.
-A brief overview of the controller and optimizer is given below. 
+Honeywell's MPC controller, RMPCT (Robust Model Predictive Control Technology), forms part of their advanced process control suite, Profit Suite.
+A brief overview of the controller and optimiser is given below. 
 Attention is given to the controller internals as well as the interface used to build such a controller.
 The information presented in this section is taken from \citet{honeywell1}, \citet{honeywell2} and \citet{honeywell3} unless stated otherwise.
 
 \subsubsection{Models}
-For the purpose of predictions, process models usually need to be identified first -- typically done via step testing.
-\citet{honeywell3} lists the types of models which are supported by the Identifier and elaborates on their specific application.
-These model types include;
+For the purpose of predictions, process models usually need to be identified first -- typically via step testing.
+\citet{honeywell3} lists the types of models which are supported by their Identifier and elaborates on their specific application.
+These model types include:
 \begin{itemize}
 \item FIR,
 \item PEM (the structure of which supports FIR, ARX, ARMA, ARMAX, ARIMA(X), ARARMAX, BJ and OE models) and
@@ -35,45 +256,48 @@ The leading {\it s} in the denominator of equation~\ref{eq:rmpctmodel} indicates
 
 If a third-party model exists, then the model converter in Profit Suite can be used to convert it into a suitable form.
   
-\subsubsection{Constraints}
-For MVs, the implementation of control constraints are in the form of high/low limits and movement limits.
-The high/low limits of MVs are never violated.
+\subsubsection{Constraints}\label{sec:rmpctcons}
+For MVs, the implementation of control constraints are in the form of high and low limits, and movement limits.
+The high and low limits of MVs are never violated.
 Prioritisation and move suppression of MVs are done by means of weighting factors.
-The movement load is spread across the MVs as per equation~\ref{eq:rmpctmvload},
+The movement load ($L_{\Delta}$) is spread across the MVs as per equation~\ref{eq:rmpctmvload}.
 \begin{equation}
   \label{eq:rmpctmvload}
-  \min \sum_j \Delta u_j^2 \times weight_j^2
+  L_{\Delta} = \min \sum_j \Delta u_j^2 \times w_j^2
 \end{equation}
-where $j$ is the index of the MV.
+where $w$ is the weight and $j$ the index of the MV.
 
-CV control constraints are also specified as high/low limits.
+CV control constraints are also specified as high and low limits.
 In the event of negative degrees of freedom, constraints are prioritised by means of a give-up factor called the engineering unit (EU) give up.
-Similar to equation~\ref{eq:rmpctmvload} the cumulative weighted error on the CVs are minimised as per equation~\ref{eq:rmpctcverror} with the $weight$ defined as shown and where $i$ is the CV index.
+Similar to equation~\ref{eq:rmpctmvload} the cumulative weighted error on the CVs ($\epsilon$) is minimised as per equation~\ref{eq:rmpctcverror} with the weight ($w$) defined as shown.
 \begin{align}
   \label{eq:rmpctcverror}
-  \min \sum_i weight_i^2 \times error_i^2 \\
-  weight = \frac{1}{(\text{CV scaling factor})_i\sqrt{(\text{EU give up})_i}} \notag
+  \epsilon = \min \sum_i w_i^2 \times e_i^2 \\
+  w = \frac{1}{(\text{CV scaling factor})_i\sqrt{(\text{EU give up})_i}} \notag
 \end{align}
+where $e$ is the error and $i$ the CV index
 
-The optimisation constraints are defined as being a specified amount within the high/low control limits.
+The optimisation constraints are defined as being a specified amount within the high or low control limits.
 These limits are not used for control.
+
 For the constraining of dynamic response, funnels are implemented.
-Predefined funnel types can be chosen from;
+Predefined funnel types can be chosen from:
 \begin{itemize}
 \item Type 0, which is an automatically generated funnel,
 \item Type 1, defined as a third of the Type 0 funnel pinched using the feedback performance ratio (FPR), and
-\item Type 2, which is like Type 1 but pinched with the decouple ratio (Type 2 is therefore FPR independent).
+\item Type 2, which is similar to Type 1 but pinched with the decouple ratio (Type 2 is therefore FPR independent).
 \end{itemize}
 Figure~\ref{fig:rmpctfunnel} illustrates the concept of pinching for the RMPCT funnels.
-The definitions of the FPR and the decouple ratio are contained in \citet{honeywell1} but omitted from this dissertation.
+The definitions of the FPR and the decouple ratio are contained in \citet{honeywell1} but are omitted from this dissertation.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\fullwidth]{rmpct_funnel}
+%  \includegraphics[width=\fullwidth]{rmpct_funnel}
+  \scalebox{1}{\input{graph/rmpctfunnel}}  
   \caption[RMPCT funnel implementation]{RMPCT funnel implementation showing pinched funnels with dashed lines.}
   \label{fig:rmpctfunnel}
 \end{figure}
 
-\subsubsection{Interface}
+\subsubsection{Interfaces}
 Profit Design Studio (figure~\ref{fig:ssrmpctmodel}) is used for model identification.
 From this interface the process model can be extracted.
 All the constraints (as discussed in the preceding section) can be added using this interface, where after the controller is built for on-line use from the Runtime Studio interface (figure~\ref{fig:ssrmpctcontrolbuild}).
@@ -82,160 +306,58 @@ The operator interface, Profit Suite Operator Station (figure~\ref{fig:ssrmpctop
 As far as feasibility of constraints are concerned, these constraints are only checked to be within the Engineering limits (an additional constraint present in this interface).
 A gain matrix (the steady-state model) can easily be obtained from this interface.
 
-%screenshots?
-
-\subsection{AspenTech DMCPlus}
-Aspen Technologies' MPC controller, DMCPlus, forms part of their advanced process control suite, aspenONE.
+\subsection{AspenTech DMCplus}
+Aspen Technologies' MPC controller, DMCplus (Dynamic Matrix Control Plus), forms part of their advanced process control suite, aspenONE.
 The overview presented in this section is taken from \citet{aspentech1} unless stated otherwise.
 
 \subsubsection{Models}
-Model identification is done with DMCplus Model or with SmartStep which enables model identification whilst still maintaining control of a plant.
+Model identification is done with DMCplus Model or with SmartStep which enables model identification while still maintaining control of a plant.
 Models are stored as FIR models and conversion to and from other model types are not supported.
-Extracting a steady-state gain matrix is however possible as the gains are displayed during the modelling phase.
+Extracting a steady-state gain matrix is possible as the gains are displayed during the modelling phase.
 
-\subsubsection{Constraints}
-As with RMPCT, constraints on the CVs and MVs are specified as high/low limits.
+\subsubsection{Constraints}\label{sec:dmcpluscons}
+As with RMPCT, constraints on the CVs and MVs are specified as high and low limits.
 In addition to the constraints, equal concern errors (ECEs) are used to calculate the optimal move plan and emphasise the relative importance of CVs.
 
-Three types of constraints are used;
+Three types of constraints are used:
 \begin{itemize}
 \item Validity limits which describe limits on measured variables and the values they can attain.
-These are the outermost limits.
+These are the outermost limits and serve only to identify faulty measurements.
 \item Engineering limits are the hard limits in which the process is operated and are not violated in a solution.
 The engineering limits lie within the validity limits.
-\item Operator limits are used for optimisation, with successful solutions keeping to these limits.
+\item Operator limits are used for optimisation, with successful solutions keeping within these limits.
 These are the innermost limits, contained within the engineering limits.
 \end{itemize}
 
-For constraint handling, rank groups are used.
-Constraints are ranked and lower rank constraints are considered ``hard'' whereas higher ranking constraints are relaxed until steady-state feasibility is achieved.
+For constraint handling, constraints are ranked using rank groups.
+Lower ranked constraints are considered ``hard'' whereas higher ranking constraints are relaxed until steady-state feasibility is achieved.
 Optimisation constraints are ranked at 1000 and constraints that are ignored are ranked at 9999.
 
 The constraint handling of integrating variables is done by utilising ramp rates.
 Constraints on the variable is generated using a factor of the time to steady-state and the upper and lower bound.
 This limits the rate of change of a variable.
 Figure~\ref{fig:dmcplusramprates} shows the constraints generated using ramp rates.
-Note that the 'inverted funnel' becomes sharper when a the full time to steady-state is used as opposed to a fraction thereof.
+The 'inverted funnel' becomes sharper when the full time to steady-state ($t_{ss}$) is used as opposed to a fraction thereof.
 
 \begin{figure}[htbp]
   \centering
-    \includegraphics[width=\fullwidth]{graph/dmcplusramprate}
-  \caption[DMCPlus ramp rate dynamic constraints]{Ramp rates creating dynamic constraints on integrating variables.}
+%    \includegraphics[width=\fullwidth]{graph/dmcplusramprate}
+  \scalebox{1}{\input{graph/dmcplusramprate}}  
+  \caption[DMCplus ramp rate dynamic constraints]{Ramp rates creating dynamic constraints on integrating variables after setpoint change.}
   \label{fig:dmcplusramprates}
 \end{figure}
 
-\subsubsection{Interface}
-The DMCPlus Model (figure~\ref{fig:ssdmcplusmodel}) interface is used to obtain models from data.
+\subsubsection{Interfaces}
+The DMCplus Model (figure~\ref{fig:ssdmcplusmodel}) interface is used to obtain models from data.
 Obtaining a gain matrix is possible from this interface.
-Additions to the model matrix is also done from this interface.
+Additions to the model matrix are also made from this interface.
 
-The controller is built using the DMCPlus Build interface (figure~\ref{fig:ssdmcpluscontrolbuild}).
-Models obtained in the previous step is implemented and a configuration file for the controller generated.
+The controller is built using the DMCplus Build interface (figure~\ref{fig:ssdmcpluscontrolbuild}).
+Models obtained in the previous step are implemented and a configuration file for the controller is generated.
 
 The Production Control Web Interface (figure~\ref{fig:ssdmcplusoperator}) is used by operators to interact with the process.
-This interface is used to actively change constraints on inputs and outputs.
+This interface is used to change constraints on inputs and outputs during process operation.
 
-\section{Case studies}
-The following actual systems were investigated to test the method, proposed in chapter~\ref{chap:conhand}.
-All rigs investigated are from the Process Modelling and Control laboratory of the University of Pretoria.
-
-\subsection{Level and flow rig}
-\subsubsection{System description}
-The level and flow rig consists of two control valves, a measured flow (to one control valve) and a measured level.
-Figure~\ref{fig:flowphoto} shows the rig along with its process flow diagram.
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=7.8cm]{graph/flowphoto.JPG}
-    %\qquad
-    \includegraphics[width=7.8cm]{graph/flowpfd}
-  \caption[Level and flow rig photo and flow diagram]{Level and flow rig photo (left) and process flow diagram (right).}
-  \label{fig:flowphoto}
-\end{figure}
-
-\subsubsection{Process model}
-The level and flow rig is modelled as a $2\times2$ system.
-The MVs are the milliamp signals sent to the valves ($x_1\text{ \& }x_2$).
-These signals correspond to the opening fractions of the two valves.
-The CVs are the flow ($F$) and the level ($L$).
-The steady-state gain matrix of this process is shown in equation~\ref{eq:flowmodel}.
-Note that valve 1 is an air-to-close valve and valve 2 is an air-to-open valve, which explain the negative gain in element 1 of $G_{fl}$.
-\begin{equation}
-  \label{eq:flowmodel}
-                    %x1       x2
-    G_{fl} = \bpm -0.0476 & -0.0498 \\      %L
-                  0.0111 & -0.0604 \\ \epm %F
-\end{equation}
-\subsubsection{Operating conditions}
-The operating conditions for this rig is shown in table~\ref{tab:flowopcon}
-\begin{table}[htbp]
-  \centering
-  \begin{tabular}{llllll}
-    \toprule
-    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
-    && Low & High & Low & High \\ 
-    \midrule
-    Inputs &$x_1 (\text{mA})$ & 4 & 20 & 4 & 20 \\
-           &$x_2 (\text{mA})$ & 4 & 20 & 4 & 20 \\[1.3ex]
-    Outputs &$F~(\text{gpm})$ & 1.2 & 1.5 & 0 & 1.9 \\
-            &$L~(\text{cm})$  & 15 & 18 & 6 & 25 \\
-    \bottomrule
-  \end{tabular}
-  \caption{Operating conditions of level and flow rig.}
-  \label{tab:flowopcon}
-\end{table}
-
-\subsection{Laboratory distillation column}
-\subsubsection{System description}
-The second case study considered is a 10-plate distillation column.
-The column is run as a closed system with bottoms and distillate mixed and fed back into the column.
-Figure~\ref{fig:columnphoto} shows a photo of the column along with its process flow diagram.
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=7.8cm]{graph/columnphoto.jpg}
-    %\qquad
-    \includegraphics[width=7.8cm]{graph/columnpfd}
-  \caption[Laboratory distillation column photo and flow diagram]{Laboratory distillation column photo (left) and flow diagram (right).}
-  \label{fig:columnphoto}
-\end{figure}
-
-\subsubsection{System model}
-The process model has been reduced to a $2\times2$ matrix.
-Reflux flowrate ($R$) and the setpoint of plate 10's temperature ($T_{10~sp}$) are the MVs, and the temperatures of plate 1 and 8 ($T_1\text{ \& }T_{8}$) are the CVs.
-The input to the model for $R$ is a milliamp value sent to the valve.
-Figure~\ref{fig:columnmodel} shows a graphic representation of the column model and equation~\ref{eq:columnmodel} gives the values of the steady-state gain model.
-\begin{equation}
-  \label{eq:columnmodel}
-                 % R      T10sp
-  G_{col} = \bpm -0.0575 & 0.96 \\       % T1
-                -0.146  & 0.518 \\ \epm % T8
-\end{equation}
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=8cm]{graph/columnmodel}
-  \caption[Column model]{Column model showing internal PI controller.}
-  \label{fig:columnmodel}
-\end{figure}
-
-The PI controller between $T_{10~sp}$ and $Q$ was added as a safety measure, should the advanced control layer fail.
-
-\subsubsection{Operating conditions}
-Table~\ref{tab:columnopcon} shows the operating conditions of the distillation column.
-\begin{table}[htbp]
-  \centering
-  \begin{tabular}{llllll}
-    \toprule
-    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operating range} & \multicolumn{2}{c}{Physical constraints} \\
-    && Low & High & Low & High \\ 
-    \midrule
-    Inputs &$R~(\text{mA})$          & 11 & 15 & 4 & 20 \\
-           &$T_{10~sp}~(\degrees{C})$ & 78 & 82 & 0 & 90 \\[1.3ex]
-    Outputs &$T_1~(\degrees{C})$     & 66 & 68 & 15 & 68 \\
-            &$T_{8}~(\degrees{C})$   & 78 & 82 & 25 & 90 \\
-    \bottomrule
-  \end{tabular}
-  \caption{Operating conditions of distillation column.}
-  \label{tab:columnopcon}
-\end{table}
 
 % Local Variables:
 % TeX-master: "AHC_thesis"

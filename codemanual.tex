@@ -1,0 +1,66 @@
+\documentclass[a4paper,12pt,pdftex]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+  \bibpunct[: ]{(}{)}{;}{a}{,}{,} 
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[hang, bf, small]{caption}
+
+%DISSERTATION REFS
+\usepackage{xr}
+\externaldocument[M-]{AHC_thesis}
+
+%MATHEMATICAL SHORTCUTS
+\newcommand{\vect}[1] %vector notation
+{{\bf {#1}}}
+\newcommand{\degrees}[1]{^{\circ}\text{{#1}}} %degree symbol
+\newcommand{\bpm}{\begin{pmatrix}} %for matrix notation
+\newcommand{\epm}{\end{pmatrix}}
+
+%TEXT SHORTCUTS
+\newcommand{\qhull}{{\tt qhull}~}
+\newcommand{\npoly}{$n$-polytope}
+\newcommand{\heading}[1]
+  {\smallskip \noindent {\bf {#1}} \\}
+
+%CITE SHORTCUTS
+\newcommand{\citepp}[4] %double parenthesis cite
+{(\citealp[{#1}]{{#2}}; \citealp[{#3}]{{#4}})}
+
+%PROGRAM LISTING COMMANDS
+\lstset{language=python, commentstyle=\emph, mathescape=true,
+                                %stringstyle=\ttfamily, 
+        breaklines, basicstyle=\small, numberstyle=\tiny, stepnumber=1}
+\newcommand\progsection[1]{\subsection*{#1.py}\label{lst:#1}\lstinputlisting{\sourcedir #1.py} \bigskip}
+\newcommand{\sourcedir}{/home/andre/codelink/}
+
+
+% Title / Author
+\title{Code Manual and Program Listing for a Systematic Approach to Model Predictive Controller Constraint 
+  Handling: Rigorous Geometric Methods}
+\author{Andr\'e H. Campher}
+\date{January 2011}
+
+\begin{document}
+\maketitle
+\bigskip
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+This document contains overviews of selected project code sections and gives details about design and implementation.
+The second part of this document gives the complete program listing for the project.
+
+This document should accompany the project dissertation and the program (provided on the CD).
+
+\input{codediscuss}
+\include{programlist}
+
+\bibliography{thesis}\addcontentsline{toc}{section}{References}
+\bibliographystyle{chemeng}
+
+\end{document}

@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+  \begin{axis}[
+    width=7.5cm,
+    xlabel=$F$~(gpm),
+    ylabel=$L$~(cm),
+    legend style={
+      draw=none}]
+
+    %AOS
+    \addplot[color=blue,thick] coordinates {
+      (1.3396,  16.9768)
+      (2.1012,  16.7992)
+      (1.3044,  15.8328)
+      (0.5428,  16.0104)
+      (1.3396,  16.9768)
+    };
+    %DOS
+    \addplot[color=black,thick,dashed] coordinates {
+      (1.2,  18)
+      (1.2,  15)
+      (1.5,  15)
+      (1.5,  18)
+      (1.2,  18)
+    };
+    \legend{AOS,DOS}
+  \end{axis}
+\end{tikzpicture}

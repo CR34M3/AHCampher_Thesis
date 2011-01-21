@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+  \begin{axis}[
+    width=13cm,
+    xlabel=$x_1$~(mA),
+    ylabel=$x_2$~(mA),
+    legend style={
+      cells={anchor=west},
+      draw=none}]
+    %AIS
+    \addplot[color=red,thick] coordinates {
+      (4,4)
+      (4,20)
+      (20,20)
+      (20,4)
+      (4,4)
+    };
+    %DIS
+    \addplot[color=blue,thick,dashed] coordinates {
+      (36.43535542,  -8.34383369)
+      (31.14919687,  -9.3152966 )
+      (-12.43535542,  32.34383369)
+      (-7.14919687,  33.3152966)
+      (36.43535542,  -8.34383369)
+    };
+    %DISn
+    \addplot[color=blue,line width=3pt,dashed] coordinates {
+      (9.28618489,  17.6059809)
+      (4.00001755,  16.63451637)
+      (14.71381511,   6.3940191)
+      (19.99998245,   7.36548363)
+      (9.28618489,  17.6059809)
+    };
+    \legend{AIS,DIS,New DIS}
+  \end{axis}
+\end{tikzpicture}

@@ -1,0 +1,114 @@
+\chapter{Case Studies}\label{chap:casestudies}
+\begin{overview}
+  The case studies investigated in this project are presented in this chapter.
+  Details are given on design, models and operating conditions of the systems. 
+\end{overview}
+
+\section{Case studies}
+To test the method of systematic constraint handling proposed in chapter~\ref{chap:conhand} the following physical systems were investigated.
+Both rigs are from the Process Modelling and Control laboratory of the University of Pretoria.
+
+\subsection{Level and flow rig}
+\subsubsection{System description}
+The level and flow rig consists of two control valves, a measured flow (to one control valve) and a measured level.
+Figure~\ref{fig:flowphoto} shows a photo of the rig along with its process flow diagram.
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=7.0cm]{graph/flowphoto.JPG}
+    %\qquad
+%    \includegraphics[width=7.8cm]{graph/flowpfd}
+    \scalebox{1}{\input{graph/flowpfd}}  
+  \caption[Level and flow rig photo and flow diagram]{Level and flow rig photo (left) and process flow diagram (right).}
+  \label{fig:flowphoto}
+\end{figure}
+
+\subsubsection{Process model}
+This rig is modelled as a $2\times2$ system.
+The MVs are the milliamp signals sent to the valves ($x_1\text{ \& }x_2$) and correspond to the fractional openings of the two valves.
+The CVs are the flow ($F$) and the level ($L$).
+The steady-state gain matrix of this process ($G_{fl}$) is shown in equation~\ref{eq:flowmodel}.
+Note that action of valve 1 is air-to-open and valve 2 is air-to-close valve, which explains the signs of the gains in the first column of $G_{fl}$.
+\begin{equation}
+  \label{eq:flowmodel}
+                    %x1       x2
+    G_{fl} = \bpm -0.0476 & -0.0498 \\      %L
+                  0.0111 & -0.0604 \\ \epm %F
+\end{equation}
+\subsubsection{Operating conditions}
+The operating conditions for this rig are shown in table~\ref{tab:flowopcon}
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operational constraints} & \multicolumn{2}{c}{Physical constraints} \\
+    && Low & High & Low & High \\ 
+    \midrule
+    Inputs &$x_1 (\text{mA})$ & 4 & 20 & 4 & 20 \\
+           &$x_2 (\text{mA})$ & 4 & 20 & 4 & 20 \\[1.3ex]
+    Outputs &$F~(\text{gpm})$ & 1.2 & 1.5 & 0 & 1.9 \\
+            &$L~(\text{cm})$  & 15 & 18 & 6 & 25 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Operating conditions of level and flow rig.}
+  \label{tab:flowopcon}
+\end{table}
+
+\subsection{Laboratory distillation column}
+\subsubsection{System description}
+The second case study investigated is a 10-plate distillation column.
+The column is run as a closed system with bottoms and distillate being mixed and fed back into the column.
+Figure~\ref{fig:columnphoto} shows a photo of the column along with its process flow diagram.
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=7.4cm]{graph/columnphoto.jpg}
+    %\qquad
+%    \includegraphics[width=7.8cm]{graph/columnpfd}
+    \scalebox{1}{\input{graph/columnpfd}}  
+  \caption[Laboratory distillation column photo and flow diagram]{Laboratory distillation column photo (left) and flow diagram (right).}
+  \label{fig:columnphoto}
+\end{figure}
+
+\subsubsection{System model}
+The process model has been reduced to a $2\times2$ matrix.
+Reflux flowrate ($R$, expressed as a milliamp value sent to the valve) and the setpoint of plate 10's temperature ($T_{10~sp}$) are the MVs.
+The temperatures of plate 1 and 8 ($T_1\text{ \& }T_{8}$) are the CVs.
+Figure~\ref{fig:columnmodel} shows a graphic representation of the column model and equation~\ref{eq:columnmodel} gives the values for the steady-state gain model.
+\begin{equation}
+  \label{eq:columnmodel}
+                 % R      T10sp
+  G_{col} = \bpm -0.0575 & 0.96 \\       % T1
+                -0.146  & 0.518 \\ \epm % T8
+\end{equation}
+\begin{figure}[htbp]
+  \centering
+%    \includegraphics[width=8cm]{graph/columnmodel}
+    \scalebox{1}{\input{graph/columnmodel}}  
+  \caption[Column model]{Column model showing internal PI controller.}
+  \label{fig:columnmodel}
+\end{figure}
+
+The PI controller between $T_{10~sp}$ and $Q$ is contained in the process' baselayer. 
+This was added as a safety measure, should the advanced control layer fail.
+
+\subsubsection{Operating conditions}
+Table~\ref{tab:columnopcon} shows the operating conditions of the distillation column.
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \multicolumn{2}{c}{Variable} & \multicolumn{2}{c}{Operational constraints} & \multicolumn{2}{c}{Physical constraints} \\
+    && Low & High & Low & High \\ 
+    \midrule
+    Inputs &$R~(\text{mA})$          & 11 & 15 & 4 & 20 \\
+           &$T_{10~sp}~(\degrees{C})$ & 78 & 82 & 0 & 90 \\[1.3ex]
+    Outputs &$T_1~(\degrees{C})$     & 66 & 68 & 15 & 68 \\
+            &$T_{8}~(\degrees{C})$   & 78 & 82 & 25 & 90 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Operating conditions of distillation column.}
+  \label{tab:columnopcon}
+\end{table}
+
+% Local Variables:
+% TeX-master: "AHC_thesis"
+% End:

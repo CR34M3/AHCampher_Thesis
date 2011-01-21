@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+  \begin{axis}[
+    width=7.5cm,
+    xlabel=$y_1$,
+    ylabel=$y_2$,
+    legend style={
+      draw=none,
+      fill=none,
+      at={(0.1,0.1)},
+      anchor=south west}]
+    %AOS
+    \addplot[color=red,thick] coordinates {
+      (0,0)
+      (0,10)
+      (10,10)
+      (10,0)
+      (0,0)
+    };
+    %Fit
+    \addplot[color=blue,line width=2pt, dashed] coordinates {
+      (0,10)
+      (10,10)
+      (7.8,0)
+      (0,10)
+    };
+    \legend{Initial set, Fitted set}
+  \end{axis}
+\end{tikzpicture}
