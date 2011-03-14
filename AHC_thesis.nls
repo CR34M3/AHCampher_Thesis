@@ -1,0 +1,56 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{$A$}]\begingroup Coefficient matrix for constraints (used with subscript)\nomeqref {3.7}
+		\nompageref{18}
+  \item [{$b$}]\begingroup half-space offsets for constraints (used with subscript)\nomeqref {3.7}
+		\nompageref{18}
+  \item [{$d$}]\begingroup System disturbance\nomeqref {2.2}
+		\nompageref{7}
+  \item [{$G$}]\begingroup Process model\nomeqref {2.2}\nompageref{7}
+  \item [{$n$}]\begingroup Number of dimensions (variables)\nomeqref {2.0}
+		\nompageref{3}
+  \item [{$u$}]\begingroup System inputs\nomeqref {2.2}\nompageref{7}
+  \item [{$x$}]\begingroup System states\nomeqref {2.2}\nompageref{7}
+  \item [{$y$}]\begingroup System outputs\nomeqref {2.2}\nompageref{7}
+
+ \nomgroup{B}
+
+  \item [{AIS}]\begingroup Available Input Space\nomeqref {2.2}
+		\nompageref{7}
+  \item [{AOIS}]\begingroup Achievable Output Interval Set\nomeqref {2.3}
+		\nompageref{9}
+  \item [{AOS}]\begingroup Available Output Space\nomeqref {2.2}
+		\nompageref{7}
+  \item [{AOS$_I$}]\begingroup Interval AOS\nomeqref {2.3}
+		\nompageref{9}
+  \item [{CV}]\begingroup Controlled variable\nomeqref {2.4}
+		\nompageref{9}
+  \item [{DIS}]\begingroup Desired Input Space\nomeqref {2.2}
+		\nompageref{7}
+  \item [{DMCPlus}]\begingroup Dynamic Matrix Control Plus\nomeqref {3.0}
+		\nompageref{12}
+  \item [{DOS}]\begingroup Desired Output Space\nomeqref {2.2}
+		\nompageref{7}
+  \item [{DV}]\begingroup Disturbance variable\nomeqref {2.4}
+		\nompageref{9}
+  \item [{EDS}]\begingroup Expected Disturbance Space\nomeqref {2.2}
+		\nompageref{7}
+  \item [{MPC}]\begingroup Model Predictive Control(ler)\nomeqref {2.4}
+		\nompageref{10}
+  \item [{MV}]\begingroup Manipulated variable\nomeqref {2.4}
+		\nompageref{9}
+  \item [{OI}]\begingroup Operability Index\nomeqref {2.2}
+		\nompageref{7}
+  \item [{OOI}]\begingroup Output Operability Index\nomeqref {2.2}
+		\nompageref{9}
+  \item [{RMPCT}]\begingroup Robust Model Predictive Control Technology\nomeqref {3.0}
+		\nompageref{12}
+
+ \nomgroup{G}
+
+  \item [{$\mu$}]\begingroup Volume of a polytope\nomeqref {2.3}
+		\nompageref{9}
+
+\end{thenomenclature}

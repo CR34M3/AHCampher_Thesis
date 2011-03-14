@@ -97,7 +97,7 @@ The DOS, as described by the operating range in table~\ref{tab:columnopcon}, is 
 
 Figure~\ref{fig:columnaosfocus} focuses on the intersection of the AOS and the DOS.
 The calculated OI is 0.006 which confirms that only a very small operating region within the DOS is attainable.
-It is also clear that the upper limit of 82$\degrees{C}$ on $T_8$ is unrealistic as the maximum value of $T_8$ (in the operating region) is only 78.2$\degrees{C}$.
+It is also clear that the upper limit of 82~\textcelsius on $T_8$ is unrealistic as the maximum value of $T_8$ (in the operating region) is only 78.2~\textcelsius.
 
 \begin{figure}[htbp]
   \centering
@@ -110,7 +110,7 @@ It is also clear that the upper limit of 82$\degrees{C}$ on $T_8$ is unrealistic
 \subsubsection{Set fitting}
 Figure~\ref{fig:columnfitbox} focuses even closer on the AOS and DOS intersection.
 The constraints representing the intersection (dark triangle) and a fitted set of high and low limits (dark dashed box) are also shown.
-The fitted limits within the intersection shows that the operating region is essentially an operating point with temperatures only having a span of about 0.1$\degrees{C}$.
+The fitted limits within the intersection shows that the operating region is essentially an operating point with temperatures only having a span of about 0.1~\textcelsius.
 In practice the DOS would be adjusted or the model re-evaluated, but for the sake of illustrating the outputs of the method, the DOS will be kept as is.
   
 \begin{figure}[htbp]
@@ -128,10 +128,10 @@ The full intersection does, however, have the advantage of a 200\% larger operat
 \subsubsection{Constraint reformatting}
 To use the constraints describing the whole intersection in figure~\ref{fig:columnfitbox}, the set needs to be reformatted to be compatible with commercial MPC packages, as they only accept high and low limits.
 
-An additional variable needs to be added to the process model and the diagonal constraint ($0.88T_8-0.47T_1\leq 36.56\degrees{C} $) needs to be expressed as a high and low limit on this variable.
+An additional variable needs to be added to the process model and the diagonal constraint ($0.88T_8-0.47T_1\leq 36.56~\textcelsius$) needs to be expressed as a high and low limit on this variable.
 
 Naming the new output $y_3$ and augmenting the process model matrix as per equation~\ref{eq:linconoutput} results in equation~\ref{eq:columnnewmodel}.
-The diagonal (linear) constraint can now be expressed as {$y_3~\leq~36.56\degrees{C}$}.
+The diagonal (linear) constraint can now be expressed as {$y_3~\leq~36.56~\textcelsius$}.
 
 \begin{equation}
   \label{eq:columnnewmodel}
@@ -195,15 +195,7 @@ It can be seen that 65.8\% of the solutions were within 10\% of the optimal solu
 
 To increase the accuracy, a multi-start approach was taken where 25 random starting points are generated.
 The largest volume set (of the 25 generated) was then used for the fitting.
-Figure~\ref{fig:arbfitaccuracy2dmulti} shows the improvement in accuracy with this method.
-
-\begin{figure}[htbp]
-  \centering
-%    \includegraphics[width=\fullwidth]{graph/arbfitaccuracy2d.pdf}
-    \scalebox{1}{\input{graph/arbfitaccuracy2dms}}
-  \caption[Accuracy of constraint set fitting for 2 variables (multi-start)]{Accuracy increase from the fitting results in figure~\ref{fig:arbfitaccuracy2d} when using a multi-start approach.}
-  \label{fig:arbfitaccuracy2dmulti}
-\end{figure}
+Figure~\ref{fig:arbfitaccuracy2d} shows the improvement in accuracy with this method.
 
 \subsubsection{Three variable systems}
 For the three variable tests, a 4-constraint set was fitted into a 6-constraint set.
@@ -216,14 +208,6 @@ Figure~\ref{fig:arbfitaccuracy3d} shows the accuracy of this test.
 %    \includegraphics[width=\fullwidth]{graph/arbfitaccuracy2d.pdf}  
     \scalebox{1}{\input{graph/arbfitaccuracy3d}}
   \caption[Accuracy of constraint set fitting for 3 variables]{Low accuracy is obtained for higher dimensional fitting of constraint sets.}
-  \label{fig:arbfitaccuracy3d}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-%    \includegraphics[width=\fullwidth]{graph/arbfitaccuracy2d.pdf}  
-    \scalebox{1}{\input{graph/arbfitaccuracy3dms}}
-  \caption[Accuracy of constraint set fitting for 3 variables (multi-start)]{The multi-start approach only decreases the variance of the fitting results in 3 dimensions.}
   \label{fig:arbfitaccuracy3d}
 \end{figure}
 
@@ -247,11 +231,11 @@ It can be seen that even though the sets are not equal, the output Operability I
 
 From these results the following observations regarding the Operability Index of \citet{vinsonphd} can be made:
 \begin{itemize}
-\item the Operability Index is a measure of moveability and emphasises the need for inputs to have a good working range to achieve outputs.
+\item the Operability Index is a measure of `mobility' and emphasises the need for inputs to have a good working range to achieve outputs.
 \item all of the input and output space are of equal importance in the Operability Index.
 \end{itemize}
 
-It is intuitive that certain sections of the input or output space are of greater importance when considering process economics, sensitivities, etc..
+It is intuitive that certain sections of the input or output space are of greater importance when considering process economics, sensitivities, etc.
 It would therefore be a sensible approach to take into consideration an additional objective function when fitting constraint sets (or when making any changes to the input or output spaces).
 Fitting a set as the volume integral of the following possible objective functions would be favourable:
 \begin{itemize}

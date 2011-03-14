@@ -38,7 +38,7 @@ The validity of such a space should be checked against the attainable regions of
 In this respect, determining the Operability Index provides a good measure of how valid a specified operating region is.
 
 \subsection{Constraint changes}
-It is typical of operators to change constraints during the operation of processes; usually tightening output or input constraints.
+The operator interfaces of commercial MPCs (figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) allow operators to change constraints during the operation of processes.
 The effects of constraint changes on their corresponding spaces are, however, neglected in commercial MPCs.
 The reduction or increase in size of the available input space for a change in output constraints (or vice versa) should be checked.
 Ideally a measure of clamping (or relaxing) of constraints should be supplied.
@@ -84,7 +84,7 @@ Even though $u_{n+1}$ represents an input constraint, it is strictly speaking an
   \label{eq:linconoutput}
    y_{m+1} = (G'\times\vect{1}_{m\times 1})'\cdot\beta
 \end{equation}
-where $\vect{1}_{m\times 1}$ is a column vector of 1's of length $m$.
+where $\vect{1}_{m\times 1}$ is a column vector of 1s of length $m$.
 \end{itemize}
 A high or low limit can now simply be applied to this newly added variable.
 For the examples above, this is simply $u_{n+1}\leq b_u$ and $y_{m+1}\leq b_y$
@@ -133,7 +133,7 @@ With the specification of the number of facets, the dimensions of $A$ and $\vect
 For $P_o$, $A$ is an $l \times n$ matrix and $\vect{b}$ is a $l \times 1$ vector.
 For $P_i$, $A$ is an $k \times n$ matrix and $\vect{b}$ is a $k \times 1$ vector.
 
-Expressed as a minimization problem, the fitting of an arbitrary shape  becomes equation~\ref{eq:arbvolmin}.
+The fitting of an arbitrary shape can be expressed as a minimization problem, as shown in equation~\ref{eq:arbvolmin}.
 \begin{align}
   \label{eq:arbvolmin}
     \min_{A,~\vect{b}}~~&\text{-volume}_{P_i}\\
@@ -143,7 +143,7 @@ Expressed as a minimization problem, the fitting of an arbitrary shape  becomes 
 This seemingly trivial optimisation problem is not covered in this form in available literature.
 A similar problem is that of optimised diamond cutting \citep{diamondcut} which maximises the volume of a diamond within a rough stone.
 This method allows for rotation, translation and scaling, but uses a fixed shape for the diamond (i.e. all aspect ratios of the fitted shape stays constant).
-Another well considered problem in literature is the packing problem, which involves packing the maximum amount of shapes in a given shape (or container).
+Another well considered problem in literature is the packing problem, which involves packing the maximum number of shapes in a given shape (or container).
 Again, the shapes considered in this problem are of fixed dimensions (and aspect ratios), but the largest dissimilarity is that a number of shapes are fitted, not just a single one.
 
 \subsection{Set reduction}
@@ -154,16 +154,16 @@ The fitting of constraint sets will decrease the operational space of the contro
 The extent to which the control problem will be decreased depends on the number of constraints fitted and the type of fit.
 
 \subsubsection{Intermediate fits}
-As per equation~\ref{eq:arbvolmin}, a progressively lower amount of constraints can be fitted within the intersection as arbitrary shapes.
+As per equation~\ref{eq:arbvolmin}, a progressively lower number of constraints can be fitted within the intersection as arbitrary shapes.
 The closer the number of constraints in fitted shape is to that of the original intersection, the larger the operational space of the controller will be.
 
-To reduce the number of additional variables that need to be added to implement linear constraints, special types of fits can be used.
+To reduce the number of additional variables that need to be added to implement linear constraints, parallel sets can be used.
 From equations~\ref{eq:linconinput} and \ref{eq:linconoutput} it is clear that the gains of variables added to the process model is only dependent on the half-space slope and the process model.
 Therefore, parallel constraints only require one variable to be added to the process model.
 
 Sets of parallel constraints can therefore be fitted, which will require one additional variable to be added to the process model per pair.
 As the slopes of the parallel constraints are not fixed (for the minimisation problem) this will be referred to as free parallel fitting.
-Enforcing these parallel constraints on the minimisation problem will result in a lower operational space for the controller when compared to an arbitrary shape with the same amount of constraints.
+Enforcing these parallel constraints on the minimisation problem will result in a lower operational space for the controller when compared to an arbitrary shape with the same number of constraints.
 
 The fitting of free parallel sets is presented as an option here, but not covered in this project.
 
@@ -185,8 +185,12 @@ In this description $\vect{b}$ is the only input variable (of size $2n \times 1$
 where $n$ is the number of dimensions (variables) present in the initial set.
 
 \subsubsection{Minimal fit}
-The lowest number of constraints that can be fitted into a set is $n+1$, where $n$ is the number of dimensions (variables) of the initial set.
-This is due to the condition that the resulting set needs to be fully bounded.
+A minimum value exists for the number of constraints that can be fitted into an \npoly.
+This is due to the condition that the resulting set needs to be fully bounded and have a finite, non-zero volume.
+For $n$ dimensions, $n$ points lie in a plane and result in a zero volume.
+Therefore, at least $n+1$ points are needed to form a \npoly with a finite volume, with the resulting polytope being a simple polytope.
+With the number of vertices at $n+1$, the minimum number of facets can be calculated as $n+1$ \citep{barnette}. 
+Therefore, the smallest number of constraints that can be fitted into a set is $n+1$, where $n$ is the number of dimensions (variables) of the initial set.
 
 \subsection{Fitting implementation}
 The implementation of the fitting procedure is discussed in the code manual and program listing accompanying this document.

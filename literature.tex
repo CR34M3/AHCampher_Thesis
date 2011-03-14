@@ -14,9 +14,10 @@ The following nomenclature is reviewed and used throughout this document \citep[
 \begin{itemize}
 \item polytope - the intersection of closed half-spaces in $\mathbb{R}^n$.
 A polytope of $n$ dimensions will simply be referred to as an $n$-polytope.
-\item vertex - a 0 dimensional face of an \npoly.
+\item vertex - a 0-dimensional face of an \npoly.
 \item facet - an $(n-1)$-dimensional face of an \npoly.
-\end{itemize}
+\end{itemize}%
+\nomenclature[a]{$n$}{Number of dimensions (variables)}%
 
 \subsubsection{Half-space geometry}\label{sec:hgeometry}
 A half-space is defined as the section of an $n$-dimensional space lying on one side of an ($n-1$)-dimensional hyperplane \citep[1282]{crcmaths}.
@@ -42,13 +43,13 @@ The full mathematical formulation of the primal-dual algorithm is omitted from t
 \citet[636-639]{primaldual1} and \citet{primaldual2} can be consulted for the full formulation. 
 
 \subsubsection{Linear transformations}
-Define $X$ and $Y$ as finite-dimensional sets with bases $(x_1,\cdots,x_n)$ and $(y_1,\cdots,y_m)$ respectively.
+Define $X$ and $Y$ as finite-dimensional sets with bases $(x_1,\dots,x_n)$ and $(y_1,\dots,y_m)$ respectively.
 For the linear transformation $\phi : X \to Y$, the following holds:
 \begin{equation}
   \label{eq:lintrans}
-  \phi(x_i) = \alpha_{i1}y_i+\cdots+\alpha_{in}y_n \text{~~~for~} i = 1, \cdots, m
+  \phi(y_i) = \alpha_{i1}x_i+\cdots+\alpha_{in}x_n \text{~~~for~} i = 1, \dots, m
 \end{equation}
-The scalars $(\alpha_{ij})_{i=1,\cdots,n;~j=1,\cdots,m}$ can be written as
+The scalars $(\alpha_{ij})_{i=1,\dots,n;~j=1,\dots,m}$ can be written as
 \begin{equation}
   \bpm
     \alpha_{11} &\cdots &\cdots &\alpha_{1n} \\
@@ -127,29 +128,41 @@ When used in conjunction with Gershgorin bands, conditions for overall stability
 \subsection{Operability Index}\label{sec:oi}
 The Operability Index was defined by \citet{vinsonphd} as a measure of steady-state process operability. 
 Constraint interdependence is used as the basis of this index. 
-Further work by \citet{limaphd} expanded this index to cover non-square systems and some application to dynamic systems.
+Further work by \citet{limaphd} expanded this index to cover non-square systems and some application to dynamic systems.%
+\nomenclature[ba]{OI}{Operability Index}%
 
 \subsubsection{Definitions}
 The Operability Index focuses on input-output relationships rather the system's dynamic states \citep{vinsonphd}. 
 Input and output values are defined by spaces (in $\mathbb{R}^n$ and $\mathbb{R}^m$, with $n$ the number of inputs and $m$ the number of outputs). 
 These spaces are the feasible regions which are bounded by the inequalities describing the ranges of the inputs or outputs. 
-The following spaces are of interest:
+The following spaces are of interest:%
+\nomenclature[a]{$u$}{System inputs}%
+\nomenclature[a]{$x$}{System states}%
+\nomenclature[a]{$y$}{System outputs}%
+
 \begin{itemize}
   \item Available Input Space (AIS); the set of attainable values of the process inputs. 
     The limits on these values are based on both physical limits (e.g.     valve openings) or process design values (e.g. flow-rates or temperatures). 
-Figure~\ref{fig:sampleaisaos} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high and low limits.
+Figure~\ref{fig:sampleaisaos} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high and low limits.%
+\nomenclature[ba]{AIS}{Available Input Space}%
   \item Achievable Output Space (AOS); this is the set of values which the process outputs can obtain, given the AIS. 
 The AIS maps to the AOS by means of a process model, $G$. 
 Therefore, a point $u$ in the AIS corresponds to a point $y$ in the AOS via $y=G(u)$. 
-Examples of AOSs for linear and non-linear models are shown in figure~\ref{fig:sampleaisaos}.
+Examples of AOSs for linear and non-linear models are shown in figure~\ref{fig:sampleaisaos}.%
+\nomenclature[a]{$G$}{Process model}%
+\nomenclature[ba]{AOS}{Available Output Space}%
   \item Desired Output Space (DOS); this represents the desired output values of a process. 
 These values are typically based on operational and financial   parameters. 
-Figure~\ref{fig:sampledos} shows a sample DOS for a two output    system along with a sample AOS.
+Figure~\ref{fig:sampledos} shows a sample DOS for a two output    system along with a sample AOS.%
+\nomenclature[ba]{DOS}{Desired Output Space}%
   \item Expected Disturbance Space (EDS); all the values of the expected disturbances to the system. 
-These values are translated back to the input space by means of the disturbance model, $G_d$.
+These values are translated back to the input space by means of the disturbance model, $G_d$.%
+\nomenclature[ba]{EDS}{Expected Disturbance Space}%
   \item Desired Input Space (DIS); in the same manner that the AIS maps to the AOS, the DIS represents combined reverse mappings of the DOS and EDS.
 The DIS is calculated as the inputs, $u$, that satisfy the model, i.e. $y=G(u,d)$ (with $y$ and $d$ from the DOS and EDS respectively).
-Figure~\ref{fig:sampledis} shows this combined translation.
+Figure~\ref{fig:sampledis} shows this combined translation.%
+\nomenclature[a]{$d$}{System disturbance}%
+\nomenclature[ba]{DIS}{Desired Input Space}%
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -177,14 +190,15 @@ Figure~\ref{fig:sampledis} shows this combined translation.
   \label{fig:sampledis}
 \end{figure}
 
-\citet{vinsonphd} defines the generalised Output Operability Index (OOI) as shown in equation~\ref{eq:genooi}. 
+\citet{vinsonphd} defines the generalised Output Operability Index (OOI\nomenclature[ba]{OOI}{Output Operability Index}) as shown in equation~\ref{eq:genooi}. 
 From this definition it is clear that the operability of a process decreases if the AOS does not cover the whole DOS. 
 Servo- and regulatory operability indices are also defined in the text, but are not shown here.
 \begin{equation}
   \label{eq:genooi}
      OOI \triangleq \frac{\mu(AOS\cap DOS)}{\mu(DOS)}
 \end{equation}
-where $\mu$ represents a function to calculate the volume of a space.
+where $\mu$ represents a function to calculate the volume of a space.%
+\nomenclature[ga]{$\mu$}{Volume of a polytope}%
 
 All the concepts above are directly applicable to square systems.
 For the case of non-square systems (more outputs than inputs) the Operability Index formulation is extended to interval operability. 
@@ -194,9 +208,11 @@ The first being controlled on a given setpoint, whereas the later is allowed to 
 \citet{limaphd} elaborates on the interval operability of linear non-square systems and defines the following spaces:
 \begin{itemize}
   \item The interval AOS (AOS$_I$); which is the union of all AOS($d$) where $d$ is within the EDS. 
-This is typically generated by the shifting of AOS($d=0$) in the directions determined by $G_d$ (the disturbance model).
+This is typically generated by the shifting of AOS($d=0$) in the directions determined by $G_d$ (the disturbance model).%
+\nomenclature[ba]{AOS$_I$}{Interval AOS}%
   \item The Achievable Output Interval Set (AOIS); defined as a rectangle with the same aspect ratio as the DOS, bound by the lines (or hyperplanes) that correspond to the minimum and maximum values of $d$ in the AOS. 
-Since the issue of interval operability is being addressed, the AOIS does not need to be strictly contained within the AOS$_I$.
+Since the issue of interval operability is being addressed, the AOIS does not need to be strictly contained within the AOS$_I$.%
+\nomenclature[ba]{AOIS}{Achievable Output Interval Set}%
 \end{itemize}
 \citet{limaphd} proceeds to define a hyper-volume ratio (HVR) as shown in equation~\ref{eq:hvr}. 
 The aim being here to define a measure for obtaining tighter control on CVs by reducing the size of the DOS (without causing infeasibilities). 
@@ -205,12 +221,15 @@ The process remains interval controllable as long as the AOIS remains a subset o
   \label{eq:hvr}
     HVR = \frac{\mu(DOS)}{\mu(AOIS)}
 \end{equation}
-where $\mu$ represents a function to calculate the volume of a space.
+where $\mu$ represents a function to calculate the volume of a space.%
+\nomenclature[ba]{CV}{Controlled variable}%
+\nomenclature[ba]{MV}{Manipulated variable}%
+\nomenclature[ba]{DV}{Disturbance variable}%
 
 To change the relative importance (tightness of control) on variables, weights are imposed on the AOIS. 
 This in turn affects the aspect ratio of the AOIS.
 
-\citet{limaphd} proposes two methods to calculate an AOIS for higher dimensional systems; an iterative method and a method based on linear programming. 
+\citet{limaphd} proposes two methods to calculate an AOIS for higher dimensional systems; an iterative method and a method based on linear programming (LP). 
 In both cases, this corresponds to the tightest set of output constraints which still render the system controllable. 
 Both methods are briefly discussed below:
 \begin{itemize}
@@ -231,7 +250,8 @@ Numerous authors have illustrated the application of the Operability Index (OI).
 \subsection{Operability Index application to MPC}
 Although the  Operability Index can be used with square or non-square, linear or non-linear models, its easiest application is to linear models. 
 This is advantageous as most of the current MPCs use linear models \citep{vinsonphd}.
-Table~\ref{tab:mpcoi} highlights some properties of MPCs which lend themselves to the  application of the Operability Index.
+Table~\ref{tab:mpcoi} highlights some properties of MPCs which lend themselves to the  application of the Operability Index.%
+\nomenclature[ba]{MPC}{Model Predictive Control(ler)}%
 \begin{table}[htbp]
   \centering
   \caption[Application of the Operability Index to MPC]{Application of the
@@ -249,7 +269,7 @@ From these descriptions the framework of Operability Index can be directly appli
     \end{tabular}
 \end{table}
 
-\citet{vinsonphd} presents a list of additional issues that limit the performance of MPCs (with specific attention to DMCplus) and proposes methods (using the Operability Index) to solve these problems. 
+\citet{vinsonphd} presents a list of additional issues that limit the performance of MPCs (with specific attention to AspenTech's DMCplus$^{\copyright}$) and proposes methods (using the Operability Index) to solve these problems. 
 These methods are indirectly applicable to the proposed constraint handling method of this document and are presented here for that reason. 
 
 Processes with considerable noise cause targets to move with each controller execution.

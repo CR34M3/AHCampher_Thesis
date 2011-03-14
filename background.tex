@@ -12,14 +12,16 @@ Finally, background information is presented on two popular commercial MPC packa
 
 \section{Model Predictive Control}\label{sec:mpclit}
 Since its successful implementation in the petrochemical industry, model predictive control (MPC) has gained widespread acceptance in the processing sector \citep[1]{maciejowskimpc}. 
-This has led to the development of many commercial MPC packages such as DMCplus (Aspentech), RMPCT (Honeywell), Connoisseur (Invensys) and SMOC (Shell Global Solutions) \citep{qinbadgwell}.
+This has led to the development of many commercial MPC packages such as DMCplus$^{\copyright}$ (Aspentech), RMPCT$^{\copyright}$ (Honeywell), Connoisseur$^{\copyright}$ (Invensys) and SMOC$^{\copyright}$ (Shell Global Solutions) \citep{qinbadgwell}.%
+\nomenclature[ba]{DMCPlus}{Dynamic Matrix Control Plus}%
+\nomenclature[ba]{RMPCT}{Robust Model Predictive Control Technology}%
 \subsection{Nomenclature and notation}
 For the sake of coherence between sources a set nomenclature and notation scheme will be used. 
 The following variables are defined; $x$ refers to the state of the system, $y$ to the outputs and $u$ to the inputs.
 Where vectors are concerned (the MIMO case), a bold face character is used, e.g. $\vect{x}$ for $x$.
 Matrices are distinguished by the use of capitals.
 
-The transpose of a matrix or a vector is indicated by a dash ($'$), e.g. $\vect{x}'$.
+The transpose of a matrix or a vector is indicated by a prime ($'$), e.g. $\vect{x}'$.
 
 For discrete time forms, $k$ is used to denote the sample number.
 For simplicity of notation, indices are used to refer to samples, i.e. $x_{k+1}$ instead of $x(k+1)$.
@@ -30,7 +32,7 @@ In this context, MPC further distinguishes itself from other predictive control 
 \citet[8]{maciejowskimpc} summarises the control scheme of MPC in four steps; Measure, Predict, Optimise and Apply. 
 These steps are summarized below:
 \begin{enumerate}
-  \item Describe (Measure); the current outputs ($y(t)$) are measured and the error (deviation from the setpoint trajectory, $s(t)$) is calculated.
+  \item Measure; the current outputs ($y(t)$) are measured and the error (deviation from the setpoint trajectory, $s(t)$) is calculated.
   \item Predict; using the model, future outputs ($\hat{y}_k$) are calculated (over the prediction horizon, $H_v$).
   \item Optimise (Calculate); control moves (over the control horizon, $H_u$) are now calculated to minimize the predicted deviation from the setpoint trajectory.
   \item Apply; only the first control move is implemented, where-after this procedure is restarted.
@@ -111,7 +113,7 @@ In the Laplace domain, the input to output relationship of a generic process (as
 \begin{equation*}
   \vect{\bar y}(s)=G(s)\vect{\bar u}(s)
 \end{equation*}
-where $G$ is the process matrix, and $\vect{\bar u}$ and $\vect{\bar y}$ are the process inputs and outputs (in deviation variables) respectively.
+where $G$ is the process matrix, and $\vect{\bar u}$ and $\vect{\bar y}$ are the process inputs and outputs (with the bars indicating deviation variables) respectively.
 The process matrix ($G$) can contain dynamic elements or, in the case of a steady-state model, only gains.
 Note that state ($\vect{x}$) information does not appear in the transfer function formulation.
 \begin{figure}[htbp]
@@ -163,7 +165,7 @@ Control constraints exist for both outputs and inputs, and typically sort into t
   \item The constraints on inputs are typically physical constraints.
     Examples are valve saturation limits and maximum heat duties.
     Control constraints on outputs are usually concerned with safety and damage to equipment.
-    Tank levels are an example hereof.
+    Tank levels are an example of this.
   \item Another class of control constraints (usually on outputs) are concerned with product quality and are thus operational in nature.
 \end{itemize}
 To add robustness to the control solution, some commercial MPCs use constraints that regulate dynamic behaviour.
@@ -189,7 +191,10 @@ For the most general case, they can be expressed as follows:
   A_x\vect{x}_k &\leq \vect{b}_x \notag
 \end{align}
 where $A_u,~A_y$ and $A_x$ are coefficient matrices, and $\vect{b}_u,~\vect{b}_y$ and $\vect{b}_x$ the half-space offsets.
-For the case where only upper and lower bounds on variables exist, $A_u$ and $\vect{b}_u$ reduce to:
+For the case where only upper and lower bounds on variables exist, $A_u$ and $\vect{b}_u$ reduce to:%
+\nomenclature[a]{$A$}{Coefficient matrix for constraints (used with subscript)}%
+\nomenclature[a]{$b$}{half-space offsets for constraints (used with subscript)}%
+
 \begin{align*}
   A_u={I\brack -I} \qquad \vect{b}_u={\vect{u}^{max}_k \brack -\vect{u}^{min}_k}
 \end{align*}
@@ -337,7 +342,7 @@ The constraint handling of integrating variables is done by utilising ramp rates
 Constraints on the variable is generated using a factor of the time to steady-state and the upper and lower bound.
 This limits the rate of change of a variable.
 Figure~\ref{fig:dmcplusramprates} shows the constraints generated using ramp rates.
-The 'inverted funnel' becomes sharper when the full time to steady-state ($t_{ss}$) is used as opposed to a fraction thereof.
+The `inverted funnel' becomes sharper when the full time to steady-state ($t_{ss}$) is used as opposed to a fraction thereof.
 
 \begin{figure}[htbp]
   \centering
