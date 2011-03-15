@@ -41,8 +41,9 @@ The process model is used when converting from the input space to the output spa
 When using a steady-state model (real matrix of gains) this results in a matrix multiplication.
 Therefore, the output of this operation is a linear transformation of the vertices of the initial constraint set.
 
-Since the steady-state gain model of the system is used, changes in outputs are the result of the matrix multiplication.
-The output values around which the model was linearised are used to translate the output space to absolute values.  
+Since the steady-state gain model of the system is used steady-state information is lost, and the result of the matrix multiplication is a change in outputs (e.g. $\Delta\vect{u}$).
+The nominal operating point (around which the model was linearised) is therefore specified and used to translate the change in the output space to absolute values.
+For the case where only sections of a space are converted (e.g. intersections), the deviation from the nominal operating point is transformed and added to the final translation.  
 
 \heading{Intersections}
 When the intersection of two constraint sets need to be calculated (as is the case with the AOS and the DOS), a method of superfluous constraints is used.

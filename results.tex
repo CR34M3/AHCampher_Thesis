@@ -15,6 +15,7 @@ It should however be noted that the proposed method also applies to higher order
 
 \subsubsection{Input and Output spaces}
 The input and output spaces for the level and flow rig are shown in figure~\ref{fig:flowaisaos}.
+These spaces are calculated from the system's operating conditions (column~\ref{tab:flowopcon}) and process model (equation~\ref{eq:flowmodel}), and shifted with the nominal operating point.
 From the intersection of the AOS and the DOS, the OI is calculated as 0.338.
 
 \begin{figure}[htbp]
@@ -80,7 +81,7 @@ The risk of specifying operational constraints that are not attainable has also 
 
 \subsection{Laboratory distillation column}
 \subsubsection{Input and Output spaces}
-From the data in table~\ref{tab:columnopcon} and equation~\ref{eq:columnmodel} the AIS and AOS of the laboratory distillation column can be generated as shown in figure~\ref{fig:columnaisaos}.
+From the data in table~\ref{tab:columnopcon}, equation~\ref{eq:columnmodel} and the column's nominal operating point the AIS and AOS of the laboratory distillation column can be generated as shown in figure~\ref{fig:columnaisaos}.
 The operating constraints for $R$ are used to construct the AIS as values outside of this range (although possible) cause the validity of the linear model to diminish.
 The DOS, as described by the operating range in table~\ref{tab:columnopcon}, is also shown.
 
