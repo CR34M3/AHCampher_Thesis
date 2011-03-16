@@ -201,31 +201,31 @@ When constraints are considered, and specifically changes to them, the types of 
 This is due to the direction of change allowed by each constraint type.
 The following set of constraint types are proposed to disambiguate the specification of constraints.
 These proposed types are based on the sources of constraints.
-\begin{itemize}
-  \item {\bf Physical constraints} represent the physical limits of the system.
+\begin{description}
+  \item [Physical constraints] represent the physical limits of the system.
   Examples are tank levels, valve saturation limits and maximum heat duties.
   Allowed changes to these constraints are usually one-sided or to the inside of a range.
-  \item {\bf Quality constraints} are concerned with product quality, these constraints are typically determined by external requirements or standards.
+  \item [Quality constraints] are concerned with product quality, these constraints are typically determined by external requirements or standards.
   Strictly speaking, changes to these constraints are allowed in any direction.
   However, due to the economic (e.g. product purity) and safety (e.g. emission limits) consequences of changes, these limits are only changed by those with granted access.
-  \item {\bf Operational constraints} are the innermost constraint set used by the MPC controller.
+  \item [Operational constraints] are the innermost constraint set used by the MPC controller.
   These constraints are typically changed using the operator interfaces (e.g. figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) and are contained within their respective variables' physical and quality constraints.
-  \item {\bf Optimisation constraints} are those constraints that are not critical for the control of the plant, but rather the performance and efficiency of the plant as determined by external cost functions.
+  \item [Optimisation constraints] are those constraints that are not critical for the control of the plant, but rather the performance and efficiency of the plant as determined by external cost functions.
   Typically these external cost functions will represent a type of saving, e.g. energy savings or product give-away reduction.
-\end{itemize}
+\end{description}
 
 The specification of spaces, in particular the AIS and the DOS, usually consists of a combination of the constraint types mentioned above.
 Classifying constraints in this unambiguous manner will further the understanding of a system and help identify which constraints can be modified to change the size or shape of a space.
 
 Commercial MPCs do not typically distinguish between different types of constraints.
 The constraint types present in RMPCT (section~\ref{sec:rmpctcons}) and DMCplus (section~\ref{sec:dmcpluscons}) are listed below and their connection to the proposed constraint types discussed.
-\begin{itemize}
-  \item {\bf Engineering limits} are typically based on a combination of physical constraints and quality constraints.
+\begin{description}
+  \item [Engineering limits] are typically based on a combination of physical constraints and quality constraints.
   The specification of the engineering limits should ideally be a subset of the physical constraints and the AOS and AIS of the process.
   One method would be to specify high and low limits on the outputs determined by their maximum values in the AOS.
   Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
-  \item {\bf Validity limits} (DMCplus) are equal to or outside of the physical constraints of a variable.
-\end{itemize}
+  \item [Validity limits] (DMCplus) are equal to or outside of the physical constraints of a variable.
+\end{description}
 
 
 

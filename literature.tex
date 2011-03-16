@@ -140,30 +140,30 @@ The following spaces are of interest:%
 \nomenclature[a]{$x$}{System states}%
 \nomenclature[a]{$y$}{System outputs}%
 
-\begin{itemize}
-  \item Available Input Space (AIS); the set of attainable values of the process inputs. 
+\begin{description}
+  \item [Available Input Space (AIS);] the set of attainable values of the process inputs. 
     The limits on these values are based on both physical limits (e.g.     valve openings) or process design values (e.g. flow-rates or temperatures). 
 Figure~\ref{fig:sampleaisaos} illustrates an AIS for two variables ($u_1, u_2$) bounded by simple high and low limits.%
 \nomenclature[ba]{AIS}{Available Input Space}%
-  \item Achievable Output Space (AOS); this is the set of values which the process outputs can obtain, given the AIS. 
+  \item [Achievable Output Space (AOS);] this is the set of values which the process outputs can obtain, given the AIS. 
 The AIS maps to the AOS by means of a process model, $G$. 
 Therefore, a point $u$ in the AIS corresponds to a point $y$ in the AOS via $y=G(u)$. 
 Examples of AOSs for linear and non-linear models are shown in figure~\ref{fig:sampleaisaos}.%
 \nomenclature[a]{$G$}{Process model}%
 \nomenclature[ba]{AOS}{Available Output Space}%
-  \item Desired Output Space (DOS); this represents the desired output values of a process. 
+  \item [Desired Output Space (DOS);] this represents the desired output values of a process. 
 These values are typically based on operational and financial   parameters. 
 Figure~\ref{fig:sampledos} shows a sample DOS for a two output    system along with a sample AOS.%
 \nomenclature[ba]{DOS}{Desired Output Space}%
-  \item Expected Disturbance Space (EDS); all the values of the expected disturbances to the system. 
+  \item [Expected Disturbance Space (EDS);] all the values of the expected disturbances to the system. 
 These values are translated back to the input space by means of the disturbance model, $G_d$.%
 \nomenclature[ba]{EDS}{Expected Disturbance Space}%
-  \item Desired Input Space (DIS); in the same manner that the AIS maps to the AOS, the DIS represents combined reverse mappings of the DOS and EDS.
+  \item [Desired Input Space (DIS);] in the same manner that the AIS maps to the AOS, the DIS represents combined reverse mappings of the DOS and EDS.
 The DIS is calculated as the inputs, $u$, that satisfy the model, i.e. $y=G(u,d)$ (with $y$ and $d$ from the DOS and EDS respectively).
 Figure~\ref{fig:sampledis} shows this combined translation.%
 \nomenclature[a]{$d$}{System disturbance}%
 \nomenclature[ba]{DIS}{Desired Input Space}%
-\end{itemize}
+\end{description}
 
 \begin{figure}[htbp]
   \centering
