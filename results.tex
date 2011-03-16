@@ -98,7 +98,7 @@ The DOS, as described by the operating range in table~\ref{tab:columnopcon}, is 
 
 Figure~\ref{fig:columnaosfocus} focuses on the intersection of the AOS and the DOS.
 The calculated OI is 0.006 which confirms that only a very small operating region within the DOS is attainable.
-It is also clear that the upper limit of 82~\textcelsius on $T_8$ is unrealistic as the maximum value of $T_8$ (in the operating region) is only 78.2~\textcelsius.
+It is also clear that the upper limit of 82~\textcelsius\ on $T_8$ is unrealistic as the maximum value of $T_8$ (in the operating region) is only 78.2~\textcelsius.
 
 \begin{figure}[htbp]
   \centering
@@ -129,10 +129,10 @@ The full intersection does, however, have the advantage of a 200\% larger operat
 \subsubsection{Constraint reformatting}
 To use the constraints describing the whole intersection in figure~\ref{fig:columnfitbox}, the set needs to be reformatted to be compatible with commercial MPC packages, as they only accept high and low limits.
 
-An additional variable needs to be added to the process model and the diagonal constraint ($0.88T_8-0.47T_1\leq 36.56~\textcelsius$) needs to be expressed as a high and low limit on this variable.
+An additional variable needs to be added to the process model and the diagonal constraint ({$0.88T_8-0.47T_1\leq 36.56$ \textcelsius}) needs to be expressed as a high and low limit on this variable.
 
 Naming the new output $y_3$ and augmenting the process model matrix as per equation~\ref{eq:linconoutput} results in equation~\ref{eq:columnnewmodel}.
-The diagonal (linear) constraint can now be expressed as {$y_3~\leq~36.56~\textcelsius$}.
+The diagonal (linear) constraint can now be expressed as {$y_3~\leq~36.56$ \textcelsius}.
 
 \begin{equation}
   \label{eq:columnnewmodel}
