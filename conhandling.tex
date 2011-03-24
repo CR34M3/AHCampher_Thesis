@@ -19,13 +19,13 @@ This serves to define the scope of the project and aids in the mathematical rigo
   These models result in real matrices and allow for strictly linear transformations of spaces.
 \item Only linear constraints are considered.
   This allows for half-space geometry to be used and ensures convexity of intersections (along with the assumption of steady-state gain models).
-\item The convexity of all spaces are assumed.
+\item The convexity of all spaces is assumed.
   This allows the use of minimum vertex descriptions.
 \end{itemize}
 Only a subset of the available model types are presented in this dissertation.
 It is by no means implied that rigorous mathematical methods are only possible for this given subset.
 
-Note that when reference is made to a ``constraint set'', all the half-spaces comprising that set as well as the feasible region (of the set) is implied.
+Note that when reference is made to a ``constraint set'', all the half-spaces comprising that set as well as the feasible region (of the set) are implied.
 
 \section{Constraint checking}
 Commercial MPCs use only their set engineering limits to check the validity of constraints.
@@ -33,7 +33,7 @@ Along with the engineering constraints (which represent the ultimate bounds) the
 This is due to the constraints in the input and output space being interconnected via the process model.
 
 \subsection{Feasibility}
-Operating regions, such as the DOS, is usually specified using external requirements on the inputs or outputs.
+Operating regions, such as the DOS, are usually specified using external requirements on the inputs or outputs.
 The validity of such a space should be checked against the attainable regions of the corresponding inputs or outputs.
 In this respect, determining the Operability Index provides a good measure of how valid a specified operating region is.
 
@@ -123,6 +123,7 @@ Although $\vect{x}$ is used in equation~\ref{eq:cset}, substitution with $\vect{
   \label{eq:cset}
   A\vect{x} \leq \vect{b}
 \end{equation}
+\\\\
 In $n$ dimensions, the general problem now becomes: 
 \begin{itemize}
   \item given a polytope, $P_o$, having $l$ facets,
@@ -158,7 +159,7 @@ As per equation~\ref{eq:arbvolmin}, a progressively lower number of constraints 
 The closer the number of constraints in fitted shape is to that of the original intersection, the larger the operational space of the controller will be.
 
 To reduce the number of additional variables that need to be added to implement linear constraints, parallel sets can be used.
-From equations~\ref{eq:linconinput} and \ref{eq:linconoutput} it is clear that the gains of variables added to the process model is only dependent on the half-space slope and the process model.
+From equations~\ref{eq:linconinput} and \ref{eq:linconoutput} it is clear that the gains of variables added to the process model are only dependent on the half-space slope and the process model.
 Therefore, parallel constraints only require one variable to be added to the process model.
 
 Sets of parallel constraints can therefore be fitted, which will require one additional variable to be added to the process model per pair.

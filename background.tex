@@ -55,7 +55,7 @@ Optimal control moves are defined in terms of objective functions.
 These functions are often referred to as cost functions \citep[41]{maciejowskimpc} as they can incorporate input and output weighting based on economic factors.
 
 The general formulation of the unconstrained objective function is presented in equation~\ref{eq:genobjfn}. 
-Modifications to this function (due to constraints) is discussed in section~\ref{sec:conobjfn}. 
+Modifications to this function (due to constraints) are discussed in section~\ref{sec:conobjfn}. 
 From \citet[17]{rawlings} and \citet[41]{maciejowskimpc}, the objective function which penalizes deviations from the setpoint trajectory as well as moves in the inputs is shown below;
 % TODO - eqn in terms of zero setpoint, generalize to non-zero sp
 \begin{equation}
@@ -339,7 +339,7 @@ Lower ranked constraints are considered ``hard'' whereas higher ranking constrai
 Optimisation constraints are ranked at 1000 and constraints that are ignored are ranked at 9999.
 
 The constraint handling of integrating variables is done by utilising ramp rates.
-Constraints on the variable is generated using a factor of the time to steady-state and the upper and lower bound.
+Constraints on the variable are generated using a factor of the time to steady-state and the upper and lower bound.
 This limits the rate of change of a variable.
 Figure~\ref{fig:dmcplusramprates} shows the constraints generated using ramp rates.
 The `inverted funnel' becomes sharper when the full time to steady-state ($t_{ss}$) is used as opposed to a fraction thereof.

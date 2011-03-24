@@ -106,7 +106,7 @@ This results from the feasible region of half-spaces being strictly convex.
 This formulation, although rigorous, suffers from some problems in execution:
 \begin{itemize}
 \item Inconsistent gradient information is generated when checking if $P_i$ is inside $P_o$.
-This arises from the fact that concept of being ``inside'' one another is not defined for two half-spaces (with the exception of parallel half-spaces).
+This arises from the fact that the concept of being `inside' one another is not defined for two half-spaces (with the exception of parallel half-spaces).
 \item Superfluous degrees of freedom are present, as the complete $A$ matrix and $\vect{b}$ are solved for.
 There is effectively 1 false degree of freedom for each facet of $P_i$.
 The rationale for still using this formulation is simple -- full control of the $A$ matrix allows for all orientations of hyperplanes to be expressed without the use of infinite slopes.
@@ -114,7 +114,7 @@ The rationale for still using this formulation is simple -- full control of the 
 This occurs when constraints move in such a way that an open set is generated.
 Figure~\ref{fig:shapeinversion} illustrates this concept.
 \item A scaling-type problem presents itself with the calculation of the volume of $P_i$.
-This come from the fact that the volume of $P_i$ is the same for $[A,~ \vect{b}]$ and $[zA,~z\vect{b}]$ where $z\in \mathbb{R}$.
+This comes from the fact that the volume of $P_i$ is the same for $[A,~ \vect{b}]$ and $[zA,~z\vect{b}]$ where $z\in \mathbb{R}$.
 Very large elements in the rows of $A$ (and their corresponding elements in $\vect{b}$) dramatically reduces the sensitivity of objective functions.
 This problem can, however, be overcome by adding a constraint to the solver used to keep the norm of $\vect{b}$ at a set value.
 \end{itemize}
@@ -153,7 +153,7 @@ This formulation was abandoned in this project due to the following disadvantage
   \item A clear correlation between the number of vertices and the number of facets on a shape does not exist (unless some properties of the shape are given).
 Figure~\ref{fig:vertsvsfaces} illustrates this concept for two 6-faceted, 3 dimensional shapes.
 This is a major problem when the number of facets (constraints) on $P_i$ needs to be specified.
-  \item A slightly different problem than the one mentioned above -- the number of facets on $P_i$ is determined by the final optimised vertices.
+  \item A slightly different problem than the one mentioned above -- the number of facets on $P_i$ are determined by the final optimised vertices.
 Internal points and duplicate vertices in the solution will cause the number of facets to decrease.
 Therefore, specification of a set number of facets becomes nearly impossible.
   \item Enforcing convexity becomes a problem when vertices are used directly.
@@ -195,7 +195,7 @@ The convexity of $P_o$ is assumed to be a given.
                     &\text{vertices}_{P_i} \text{~satisfy~} (A\vect{x}\leq\vect{b})_{P_o} \notag  
 \end{align}
 
-The constraints as imposed on SLSQP is not possible for simplex.
+The constraints as imposed on SLSQP are not possible for simplex.
 A penalty formulation for the objective function is therefore used.
 Equation~\ref{eq:fminobjfn} shows the objective function for use with simplex.
 The same argument for convexity holds as with SLSQP.
