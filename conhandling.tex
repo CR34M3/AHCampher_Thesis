@@ -37,6 +37,9 @@ Operating regions, such as the DOS, are usually specified using external require
 The validity of such a space should be checked against the attainable regions of the corresponding inputs or outputs.
 In this respect, determining the Operability Index provides a good measure of how valid a specified operating region is.
 
+The same argument for feasible constraints apply to setpoints.
+The specification of setpoints should be checked to be within the attainable output space for a given available input space.
+
 \subsection{Constraint changes}
 The operator interfaces of commercial MPCs (figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) allow operators to change constraints during the operation of processes.
 The effects of constraint changes on their corresponding spaces are, however, neglected in commercial MPCs.
@@ -52,10 +55,6 @@ This clamping factor ($C$) is shown in equation~\ref{eq:inputclamp}.
   C = 1-\frac{\mu(AIS \cap DISn)}{\mu(AIS \cap DIS)}
 \end{equation}
 where $\mu$ is a function to calculate the hypervolume of a space.
-
-\subsection{Setpoints}
-The same argument for feasible constraints apply to setpoints.
-The specification of setpoints should be checked to be within the attainable output space for a given available output space.
 
 \section{Commercial MPC interfacing}
 As discussed in section~\ref{sec:commercialmpc}, most commercial MPC packages only allow for high and low limits to be imposed on variables.
@@ -198,7 +197,7 @@ The implementation of the fitting procedure is discussed in the code manual and 
 Therein, attention is also given to different problem formulations and the advantages and disadvantages thereof.
 
 \section{Constraint types}
-When constraints are considered, and specifically changes to them, the types of constraint present are important.
+When constraints are considered, and specifically changes to them, the types of constraints present are important.
 This is due to the direction of change allowed by each constraint type.
 The following set of constraint types are proposed to disambiguate the specification of constraints.
 These proposed types are based on the sources of constraints.
