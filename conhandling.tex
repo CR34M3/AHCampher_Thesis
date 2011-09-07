@@ -27,6 +27,10 @@ It is by no means implied that rigorous mathematical methods are only possible f
 
 Note that when reference is made to a ``constraint set'', all the half-spaces comprising that set as well as the feasible region (of the set) are implied.
 
+Finally, it should also be noted that the concepts presented in this document apply to higher order systems, even though only 2-dimensional examples are presented for ease of illustration. 
+Programatically, the number of dimensions are only constrained by the algorithm used to calculate the convex hull (\texttt{qhull}).
+However, the design of the code allows for \texttt{qhull} to be replaced by another algorithm with only minor changes.
+
 \section{Constraint checking}
 Commercial MPCs use only their set engineering limits to check the validity of constraints.
 Along with the engineering constraints (which represent the ultimate bounds) the model should also be used to validate constraints. 
@@ -57,9 +61,42 @@ This clamping factor ($C$) is shown in equation~\ref{eq:inputclamp}.
 where $\mu$ is a function to calculate the hypervolume of a space.
 
 \section{Commercial MPC interfacing}
-As discussed in section~\ref{sec:commercialmpc}, most commercial MPC packages only allow for high and low limits to be imposed on variables.
+The clamping factor ($C$) defined in the previous section serves to guide operators when changes to constraints are made.
+Implementation of this number into the user interface of a commercial MPC would therefore be beneficial.
+
+\subsection{Constraint types}
+When constraints are considered, and specifically changes to them, the types of constraints present are important.
+This is due to the direction of change allowed by each constraint type.
+The following set of constraint types are proposed to disambiguate the specification of constraints.
+These proposed types are based on the sources of constraints.
+\begin{description}
+  \item [Physical constraints] represent the physical limits of the system.
+  Examples are tank levels, valve saturation limits and maximum heat duties.
+  Allowed changes to these constraints are usually one-sided or to the inside of a range.
+  \item [Quality constraints] are concerned with product quality, these constraints are typically determined by external requirements or standards.
+  Strictly speaking, changes to these constraints are allowed in any direction.
+  However, due to the economic (e.g. product purity) and safety (e.g. emission limits) consequences of changes, these limits are only changed by those with granted access.
+  \item [Operational constraints] are the innermost constraint set used by the MPC controller.
+  These constraints are typically changed using the operator interfaces (e.g. figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) and are contained within their respective variables' physical and quality constraints.
+  \item [Optimisation constraints] are those constraints that are not critical for the control of the plant, but rather the performance and efficiency of the plant as determined by external cost functions.
+  Typically these external cost functions will represent a type of saving, e.g. energy savings or product give-away reduction.
+\end{description}
+
+The specification of spaces, in particular the AIS and the DOS, usually consists of a combination of the constraint types mentioned above.
+Classifying constraints in this unambiguous manner will further the understanding of a system and help identify which constraints can be modified to change the size or shape of a space.
+
+Commercial MPCs do not typically distinguish between different types of constraints.
+The constraint types present in RMPCT (section~\ref{sec:rmpctcons}) and DMCplus (section~\ref{sec:dmcpluscons}) are listed below and their connection to the proposed constraint types discussed.
+\begin{description}
+  \item [Engineering limits] are typically based on a combination of physical constraints and quality constraints.
+  The specification of the engineering limits should ideally be a subset of the physical constraints and the AOS and AIS of the process.
+  One method would be to specify high and low limits on the outputs determined by their maximum values in the AOS.
+  Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
+  \item [Validity limits] (DMCplus) are equal to or outside of the physical constraints of a variable.
+\end{description}
 
 \subsection{Linear constraints}\label{sec:lincons}
+As discussed in section~\ref{sec:commercialmpc}, most commercial MPC packages only allow for high and low limits to be imposed on variables.
 For the case where constraints that are linear combinations of variables are present (e.g. $\beta_1 y_1+\beta_2 y_2\leq b_1$), they need to be reformatted to conform to the limited structure provided by commercial MPCs.
 Adding an unmeasured variable to a system by adding rows to the process matrix is a common technique used with commercial MPCs.
 This same technique can be used to impose linear constraints  on outputs or inputs.
@@ -195,39 +232,6 @@ Therefore, the smallest number of constraints that can be fitted into a set is $
 \subsection{Fitting implementation}
 The implementation of the fitting procedure is discussed in the code manual and program listing accompanying this document.
 Therein, attention is also given to different problem formulations and the advantages and disadvantages thereof.
-
-\section{Constraint types}
-When constraints are considered, and specifically changes to them, the types of constraints present are important.
-This is due to the direction of change allowed by each constraint type.
-The following set of constraint types are proposed to disambiguate the specification of constraints.
-These proposed types are based on the sources of constraints.
-\begin{description}
-  \item [Physical constraints] represent the physical limits of the system.
-  Examples are tank levels, valve saturation limits and maximum heat duties.
-  Allowed changes to these constraints are usually one-sided or to the inside of a range.
-  \item [Quality constraints] are concerned with product quality, these constraints are typically determined by external requirements or standards.
-  Strictly speaking, changes to these constraints are allowed in any direction.
-  However, due to the economic (e.g. product purity) and safety (e.g. emission limits) consequences of changes, these limits are only changed by those with granted access.
-  \item [Operational constraints] are the innermost constraint set used by the MPC controller.
-  These constraints are typically changed using the operator interfaces (e.g. figures~\ref{fig:ssrmpctoperator} and \ref{fig:ssdmcplusoperator}) and are contained within their respective variables' physical and quality constraints.
-  \item [Optimisation constraints] are those constraints that are not critical for the control of the plant, but rather the performance and efficiency of the plant as determined by external cost functions.
-  Typically these external cost functions will represent a type of saving, e.g. energy savings or product give-away reduction.
-\end{description}
-
-The specification of spaces, in particular the AIS and the DOS, usually consists of a combination of the constraint types mentioned above.
-Classifying constraints in this unambiguous manner will further the understanding of a system and help identify which constraints can be modified to change the size or shape of a space.
-
-Commercial MPCs do not typically distinguish between different types of constraints.
-The constraint types present in RMPCT (section~\ref{sec:rmpctcons}) and DMCplus (section~\ref{sec:dmcpluscons}) are listed below and their connection to the proposed constraint types discussed.
-\begin{description}
-  \item [Engineering limits] are typically based on a combination of physical constraints and quality constraints.
-  The specification of the engineering limits should ideally be a subset of the physical constraints and the AOS and AIS of the process.
-  One method would be to specify high and low limits on the outputs determined by their maximum values in the AOS.
-  Along with a safety factor -- dependant on model uncertainty -- the intersection of these spaces would provide a better set of engineering limits.
-  \item [Validity limits] (DMCplus) are equal to or outside of the physical constraints of a variable.
-\end{description}
-
-
 
 % Local Variables:
 % TeX-master: "AHC_thesis"

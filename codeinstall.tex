@@ -1,0 +1,34 @@
+\section{Installation notes}
+
+\subsection{Operating systems}
+The routines for this project was developed in Linux (Ubuntu 10.04) and this is the only supported operating system.
+The code has been run on Apple Mac, but instructions for this is not included in this document.
+
+\subsection{Dependencies}
+The code was developed using Python 2.6 and should be compatible with subsequent versions.
+In addition to the base Python modles, NumPy and SciPy are required for calculations.
+Subprocess calls in conjunctions with the qhull binaries are utilised, which requires both the qhull libraries and binaries to be installed.
+
+Table \ref{tab:installs} lists the packages that need to be installed on Ubuntu.
+These can be installed from the command line using \texttt{sudo apt-get install {\it[package name]}}.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    Package & Package name\\ 
+    \midrule
+	Python 2.6 & \texttt{python2.6}\\
+	SciPy & \texttt{python-scipy}\\
+	NumPy & \texttt{python-numpy}\\
+	qhull libraries & \texttt{libqhull5}\\
+	qhull binaries & \texttt{qhull-bin}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Package installations required in Ubuntu 10.04.}
+  \label{tab:installs}
+\end{table}
+
+% Local Variables:
+% TeX-master: "codemanual"
+% End:

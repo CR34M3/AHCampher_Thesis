@@ -1,7 +1,7 @@
 \chapter*{Synopsis}\addcontentsline{toc}{section}{Synopsis}
 The models used by model predictive controllers (MPCs) to predict future outcomes are usually unconstrained forms like impulse or step responses and discrete state space models. 
 Certain MPC algorithms allow constraints  to be imposed on the inputs or outputs of a system; but they may be infeasible as they are not checked for consistency via the process model. 
-Consistent constraint handling methods -- which account for their interdependence and disambiguate the language used to specify constraints -- would therefore be an attractive addition to any MPC package.
+Consistent constraint handling methods -- which account for their interdependence and disambiguate the language used to specify constraints -- would therefore be an attractive aid when using any MPC package.
 
 A rigorous and systematic approach to constraint management has been developed, building on the work of \citet{vinsonphd}, \citet{limaphd} and \citet{opconproc} in interpreting constraint interactions. 
 The method supports linear steady-state system models, and provides routines to obtain the following information:
@@ -13,9 +13,9 @@ The method supports linear steady-state system models, and provides routines to 
 \end{itemize}
 Mathematical rigour and unambiguous language for identifying constraint types were key design criteria. 
 
-The outputs of the program are compatible with commercial MPC packages, such as Honeywell's RMPCT$^{\copyright}$ and AspenTech's DMCPlus$^{\copyright}$.
-These packages were used in conjunction with the developed software to test functionality and performance of the method.
-The method was applied to laboratory scale test rigs running the aforementioned commercial MPC packages.
+The outputs of the program provide guidance when handling constraints, as opposed to rules of thumb and experience, and promote understanding of the system and its constraints.
+The metrics presented are not specific to any commercial MPC and can be implemented in the user interfaces of such MPCs.
+The method was applied to laboratory-scale test rigs to illustrate the information obtained.
 \bigskip
 
 \noindent \textbf{KEYWORDS:} constraint handling, model predictive

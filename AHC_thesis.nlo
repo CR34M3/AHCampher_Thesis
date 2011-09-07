@@ -7,16 +7,16 @@
 \nomenclatureentry{a$G$@[{$G$}]\begingroup Process model\nomeqref {2.2}|nompageref}{7}
 \nomenclatureentry{baAOS@[{AOS}]\begingroup Available Output Space\nomeqref {2.2}|nompageref}{7}
 \nomenclatureentry{baDOS@[{DOS}]\begingroup Desired Output Space\nomeqref {2.2}|nompageref}{7}
-\nomenclatureentry{baEDS@[{EDS}]\begingroup Expected Disturbance Space\nomeqref {2.2}|nompageref}{7}
-\nomenclatureentry{a$d$@[{$d$}]\begingroup System disturbance\nomeqref {2.2}|nompageref}{7}
-\nomenclatureentry{baDIS@[{DIS}]\begingroup Desired Input Space\nomeqref {2.2}|nompageref}{7}
-\nomenclatureentry{baOOI@[{OOI}]\begingroup Output Operability Index\nomeqref {2.2}|nompageref}{9}
+\nomenclatureentry{baEDS@[{EDS}]\begingroup Expected Disturbance Space\nomeqref {2.2}|nompageref}{8}
+\nomenclatureentry{a$d$@[{$d$}]\begingroup System disturbance\nomeqref {2.2}|nompageref}{8}
+\nomenclatureentry{baDIS@[{DIS}]\begingroup Desired Input Space\nomeqref {2.2}|nompageref}{8}
+\nomenclatureentry{baOOI@[{OOI}]\begingroup Output Operability Index\nomeqref {2.2}|nompageref}{8}
 \nomenclatureentry{ga$\mu$@[{$\mu$}]\begingroup Volume of a polytope\nomeqref {2.3}|nompageref}{9}
 \nomenclatureentry{baAOS$_I$@[{AOS$_I$}]\begingroup Interval AOS\nomeqref {2.3}|nompageref}{9}
 \nomenclatureentry{baAOIS@[{AOIS}]\begingroup Achievable Output Interval Set\nomeqref {2.3}|nompageref}{9}
-\nomenclatureentry{baCV@[{CV}]\begingroup Controlled variable\nomeqref {2.4}|nompageref}{9}
-\nomenclatureentry{baMV@[{MV}]\begingroup Manipulated variable\nomeqref {2.4}|nompageref}{9}
-\nomenclatureentry{baDV@[{DV}]\begingroup Disturbance variable\nomeqref {2.4}|nompageref}{9}
+\nomenclatureentry{baCV@[{CV}]\begingroup Controlled variable\nomeqref {2.4}|nompageref}{10}
+\nomenclatureentry{baMV@[{MV}]\begingroup Manipulated variable\nomeqref {2.4}|nompageref}{10}
+\nomenclatureentry{baDV@[{DV}]\begingroup Disturbance variable\nomeqref {2.4}|nompageref}{10}
 \nomenclatureentry{baMPC@[{MPC}]\begingroup Model Predictive Control(ler)\nomeqref {2.4}|nompageref}{10}
 \nomenclatureentry{baDMCPlus@[{DMCPlus}]\begingroup Dynamic Matrix Control Plus\nomeqref {3.0}|nompageref}{12}
 \nomenclatureentry{baRMPCT@[{RMPCT}]\begingroup Robust Model Predictive Control Technology\nomeqref {3.0}|nompageref}{12}

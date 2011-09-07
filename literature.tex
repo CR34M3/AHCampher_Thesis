@@ -115,6 +115,12 @@ The use of singular values are preferred as eigenvalues are a poor
 measure of gain and can often be misleading \citep[75]{skogestad}.
 Maximum and minimum singular values are mostly used to select controlled variables but can also be used as a performance measure along with the condition number \citepp{596}{luyben}{80-82}{skogestad}.
 
+A competing aproach to the Operability Index (defined in the next section) is that of flexibility and the Flexibility Index defined by \citep{grossmann1}.
+This approach comprises the definition of a feasible operating region (by way of fundamental equations as well as operating constraints) and then determining the maximum deviations on the combined process parameter set.
+The Flexibility Index corresponds to the largest allowed deviation (or flexibility) of the parameter set which still ensures feasible operation.
+\citep{grossmann2} expands on this index by reformulating the main optimisation problem to ensure solution convergence.
+An active constraint strategy is also applied to non-linear problems to reduce the computational effort required and ensure solution convergence (with some linearising assumptions).
+
 \subsubsection{Dynamic operability measures}
 The RGA can be expanded to contain frequency-dependant terms and is often referred to as the dynamic relative gain array (DRGA) \citep[637]{marlin}. 
 The RDG \citep{artrdg} can be expanded in a similar way to include frequency-dependant terms.

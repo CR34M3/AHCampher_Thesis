@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt,pdftex]{article}
 
+\usepackage{booktabs}
 \usepackage{microtype}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -47,7 +48,9 @@
 
 \begin{document}
 \maketitle
-\bigskip
+
+\newpage
+
 \tableofcontents
 
 \newpage
@@ -58,6 +61,7 @@ The second part of this document gives the complete program listing for the proj
 
 This document should accompany the project dissertation and the program (provided on the CD).
 
+\input{codeinstall}
 \input{codediscuss}
 \include{programlist}
 
